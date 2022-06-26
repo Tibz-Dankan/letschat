@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 if (process.env.NODE_ENV === "production") {
@@ -9,6 +10,9 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.use(express.json());
+
+// user routes
+app.use("/", userRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>

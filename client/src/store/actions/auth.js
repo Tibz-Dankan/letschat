@@ -1,32 +1,12 @@
 /* eslint-disable no-unused-vars */
 import { baseUrl } from "../appStore";
 import axios from "axios";
-import { authenticate, logout } from "../reducers/auth";
+import { authActions } from "../reducers/auth";
 
-// export const logOut = () => {
-//   clearLogoutTimer();  // removing the logout timer
-//   localStorage.removeItem("userData"); // save data to storage
-//   return authActions.logout(); // return the logout action
-// };
-
-// export const authenticate = (user, token, devices, expiryTime) => {
-//   return async (dispatch) => {
-//     await dispatch(authActions.authenticate({ token: token, user: user }));
-//     dispatch(setLogoutTimer(expiryTime));
-//   };
-// };
-// const setLogoutTimer = (expirationTime) => {
-//   return (dispatch) => {
-//     timer = setTimeout(() => {
-//       dispatch(logout());
-//     }, expirationTime);
-//   };
-// };
-// const clearLogoutTimer = () => {
-//   if (timer) {
-//     clearTimeout(timer);
-//   }
-// };
+export const logOut = () => {
+  localStorage.removeItem("userData");
+  return authActions.logout();
+};
 
 const saveDataToStorage = (user, token) => {
   localStorage.setItem(
@@ -51,8 +31,13 @@ export const login = (email, password) => {
     }
     // get the expiry time  // to be done later
     // dispatch authenticate action
+    await dispatch(
+      authActions.authenticate({
+        token: response.data.token,
+        user: response.data.user,
+      })
+    );
     // dispatch an alert msg  // to be done later
-    // save data to local storage
     saveDataToStorage(response.data.user, response.data.token);
   };
 };
@@ -66,7 +51,7 @@ export const signup = (userName, email, password) => {
     });
     console.log(response);
     if (response.data.errorMessage) {
-      // alert msg with the user via a modal
+      // dispatch an alert msg with the user via a modal
       throw new Error(response.data.errorMessage);
     }
     if (response.data.status === "success") {

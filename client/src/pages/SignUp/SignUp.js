@@ -6,6 +6,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FadeLoader } from "react-spinners";
 import { signup } from "../../store/actions/auth";
 import { disableEnableButton } from "../../utils/disableEnableButton";
+import { log } from "../../utils/consoleLog";
 import styles from "./SignUp.module.scss";
 
 const SignUp = () => {
@@ -60,9 +61,7 @@ const SignUp = () => {
     } catch (error) {
       setIsLoading(false);
       disableEnableButton("button", false);
-      console.log("error msg: ", error.message);
-      // throw new Error(error.message);
-      // console.log(new Error(error.message));
+      log("error msg: ", error.message);
     }
   };
 

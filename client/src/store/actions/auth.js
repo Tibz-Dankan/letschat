@@ -2,6 +2,7 @@
 import { baseUrl } from "../appStore";
 import axios from "axios";
 import { authActions } from "../reducers/auth";
+import { log } from "../../utils/consoleLog";
 
 export const logOut = () => {
   localStorage.removeItem("userData");
@@ -24,7 +25,7 @@ export const login = (email, password) => {
       email: email,
       password: password,
     });
-    console.log(response);
+    log(response);
     if (response.data.errorMessage) {
       //   Dispatch an alert msg in the model
       throw new Error(response.data.errorMessage);
@@ -49,7 +50,7 @@ export const signup = (userName, email, password) => {
       email: email,
       password: password,
     });
-    console.log(response);
+    log(response);
     if (response.data.errorMessage) {
       // dispatch an alert msg with the user via a modal
       throw new Error(response.data.errorMessage);

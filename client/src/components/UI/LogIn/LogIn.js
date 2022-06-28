@@ -7,6 +7,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FadeLoader } from "react-spinners";
 import { login } from "../../../store/actions/auth";
 import { disableEnableButton } from "../../../utils/disableEnableButton";
+import {log} from "../../../utils/consoleLog"
 import styles from "./LogIn.module.scss";
 
 const LogIn = () => {
@@ -50,7 +51,7 @@ const LogIn = () => {
     } catch (error) {
       setIsLoading(false);
       disableEnableButton("button", false);
-      console.log("error msg: ", error.message);
+      log("error msg: ", error.message);
     }
   };
 

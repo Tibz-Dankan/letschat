@@ -30,6 +30,16 @@ User.getUserByToken = (token) => {
   return db.query("SELECT * FROM users WHERE user_verify_token =$1", [token]);
 };
 
+// Get all users
+User.getAllUsers = () => {
+  return db.query("SELECT * FROM users");
+};
+
+// Get all users
+User.getAllUsersExceptMe = (userId) => {
+  return db.query("SELECT * FROM users WHERE user_id !=$1", [userId]);
+};
+
 // update password
 User.updatePassword = (newHashedPassword, userId, userEmail) => {
   return db.query(

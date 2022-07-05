@@ -4,9 +4,13 @@ import axios from "axios";
 import { usersActions } from "../reducers/users";
 import { log } from "../../utils/consoleLog";
 
-export const getUsers = (user_id) => {
+export const getUsers = (user_id, token) => {
   return async (dispatch) => {
-    const response = await axios.get(`${baseUrl}/chat/${user_id}`); // consider adding to this request
+    const response = await axios.get(`${baseUrl}/chat/${user_id}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
     log(response);
     if (response.data.errorMessage) {
       //   Dispatch an alert msg in the model when user data is not fetched

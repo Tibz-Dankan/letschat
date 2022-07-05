@@ -11,13 +11,14 @@ const Users = ({ socket }) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const user_id = useSelector((state) => state.auth.user.userId);
+  const authToken = useSelector((state) => state.auth.token);
   const effectRan = useRef(false);
 
   const getRegisteredUsers = async () => {
     if (!user_id) return;
     try {
       setIsLoading(true);
-      await dispatch(getUsers(user_id));
+      await dispatch(getUsers(user_id, authToken));
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);

@@ -31,7 +31,7 @@ const ChatMessages = ({ socket }) => {
   const getChatMessages = async () => {
     const ChatRoomId = generateChatRoomId(currentUserId, chatWithUserId);
     if (!chatRoomId) {
-      // dispatch alert msg with a reload button
+      // dispatch alert msg with a reload button // should be a function
       alert("No chat Room Id");
       return;
     }

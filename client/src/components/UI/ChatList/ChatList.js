@@ -15,10 +15,7 @@ const ChatList = ({ socket }) => {
 
   // Join chat room
   const joinRoom = async (chatWithUser) => {
-    const chatRoomId = await generateChatRoomId(
-      currentUserId,
-      chatWithUser.user_id
-    );
+    const chatRoomId = generateChatRoomId(currentUserId, chatWithUser.user_id);
     await dispatch(updateChatWithUserData(chatWithUser));
     socket.emit("joinRoom", chatRoomId);
   };

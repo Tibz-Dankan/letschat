@@ -10,6 +10,9 @@ export const chatSlice = createSlice({
     chatMessages(state, action) {
       state.messages = action.payload.messages;
     },
+    clearChatMessages(state) {
+      state.messages = [];
+    },
   },
 });
 

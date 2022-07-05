@@ -1,9 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useEffect, useRef } from "react";
 import { usersActions } from "../../store/reducers/users";
 import { useSelector, useDispatch } from "react-redux";
 import { log } from "../../utils/consoleLog";
 import { generateChatRoomId } from "../../utils/generateChatRoomId";
-import { getChatMessages } from "../../store/actions/chat";
 import ChatMessages from "../../components/UI/ChatMessages/ChatMessages";
 import styles from "./ChatRoom.module.scss";
 
@@ -16,35 +16,28 @@ const ChatRoom = ({ socket }) => {
   );
   const currentUserId = useSelector((state) => state.auth.user.userId);
 
-  // update redux store and reconnect user to room on page reload
-  if (performance.getEntriesByType("navigation")[0].type === "reload") {
+  const updateChatWithUserData = () => {
     dispatch(
       usersActions.chatWithUser({
         chatWithUser: JSON.parse(localStorage.getItem("chatWithUser")),
       })
     );
+  };
+
+  // update redux store and reconnect user to room on page reload
+  if (performance.getEntriesByType("navigation")[0].type === "reload") {
+    updateChatWithUserData();
     socket.emit("joinRoom", generateChatRoomId(currentUserId, chatWithUserId));
     log("Reloading...  Reconnecting user to the Room");
   }
 
-  const getMessages = async () => {
-    const ChatRoomId = generateChatRoomId(currentUserId, chatWithUserId);
-    try {
-      await dispatch(getChatMessages(ChatRoomId));
-    } catch (error) {
-      log("Error msg:" + error.message);
-    }
-  };
-
-  // Get chat messages on first render and on reload
   useEffect(() => {
     if (effectRan.current === false) {
-      getMessages();
+      updateChatWithUserData();
       return () => {
         effectRan.current = true;
       };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

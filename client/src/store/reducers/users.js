@@ -14,6 +14,9 @@ export const usersSlice = createSlice({
     chatWithUser(state, action) {
       state.chatWithUser = action.payload.chatWithUser;
     },
+    clearUserData(state) {
+      state.chatWithUser = {};
+    },
   },
 });
 

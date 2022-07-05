@@ -22,10 +22,20 @@ export const getUsers = (user_id) => {
 const saveChatWithUserToStorage = (userObj) => {
   localStorage.setItem("chatWithUser", JSON.stringify(userObj));
 };
+const clearLocalStorage = () => {
+  localStorage.removeItem("chatWithUser");
+};
 
 export const updateChatWithUserData = (userObject) => {
   return async (dispatch) => {
     await dispatch(usersActions.chatWithUser({ chatWithUser: userObject }));
     saveChatWithUserToStorage(userObject);
+  };
+};
+
+export const clearChatRoomAndLocalStorage = () => {
+  return async (dispatch) => {
+    await dispatch(usersActions.clearUserData());
+    clearLocalStorage();
   };
 };

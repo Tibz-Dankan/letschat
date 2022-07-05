@@ -1,39 +1,74 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, Fragment, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { log } from "../../../utils/consoleLog";
+import { baseUrl } from "../../../store/appStore";
 import { generateChatRoomId } from "../../../utils/generateChatRoomId";
+import { clearChatRoomAndLocalStorage } from "../../../store/actions/users";
 import { IoMdVideocam } from "react-icons/io";
 import { IoCallSharp } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import { GiPlayButton } from "react-icons/gi";
 import { IconContext } from "react-icons";
+import axios from "axios";
 import styles from "./ChatMessages.module.scss";
 
 const ChatMessages = ({ socket }) => {
   const [text, setText] = useState("");
-  // Initials state of messages is from redux store
-  const messagesInStore = useSelector((state) => state.chat.messages);
-  const [messages, setMessages] = useState(messagesInStore);
-
-  useEffect(() => {
-    if (messagesInStore === null) {
-      setMessages(messagesInStore);
-    }
-  }, [messagesInStore]);
-
+  const [messages, setMessages] = useState([]);
   const effectRan = useRef(false);
+  const authToken = useSelector((state) => state.auth.token);
   const imageUrl = useSelector((state) => state.users.chatWithUser.image_url);
   const chatWithUserId = useSelector(
     (state) => state.users.chatWithUser.user_id
   );
   const currentUserId = useSelector((state) => state.auth.user.userId);
+  const chatRoomId = generateChatRoomId(chatWithUserId, currentUserId);
+  log("chat room Id: " + chatRoomId); // to be removed
+  const dispatch = useDispatch();
+
+  const getChatMessages = async () => {
+    const ChatRoomId = generateChatRoomId(currentUserId, chatWithUserId);
+    if (!chatRoomId) {
+      // dispatch alert msg with a reload button
+      alert("No chat Room Id");
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `${baseUrl}/chat-messages/${ChatRoomId}`,
+        {
+          headers: {
+            Authorization: "Bearer " + authToken,
+          },
+        }
+      );
+      console.log("chat messages from the server");
+      console.log(response);
+      if (response.data.errorMessage) {
+        //   Dispatch an alert msg in the model // should be a function
+        throw new Error(response.data.errorMessage);
+      }
+      setMessages(response.data.data);
+    } catch (error) {
+      log("Error msg:" + error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (effectRan.current === false) {
+      getChatMessages();
+      console.log("fetching chat messages");
+      return () => {
+        effectRan.current = true;
+      };
+    }
+  }, []);
 
   const handleTextChange = (event) => {
     setText(event.target.value);
   };
-
-  // TODO: consider adding message id (this could be date) // to be decided
 
   // provides format  -> Sun Jul 03 2022;
   const getDateString = (dateObject) => {
@@ -50,7 +85,6 @@ const ChatMessages = ({ socket }) => {
     });
   };
 
-  log("chat room Id: " + generateChatRoomId(chatWithUserId, currentUserId)); // to be removed
   // function to send text message to the server
   const msgObject = {
     chatRoomId: generateChatRoomId(chatWithUserId, currentUserId),
@@ -67,7 +101,7 @@ const ChatMessages = ({ socket }) => {
     setText("");
   };
 
-  // Getting the text message from the server
+  // Getting the text message from the server(backend)
   useEffect(() => {
     if (effectRan.current === false) {
       socket.on("receiveMessage", (msg) => {
@@ -83,7 +117,11 @@ const ChatMessages = ({ socket }) => {
   return (
     <Fragment>
       <div className={styles["chat__Message__container"]}>
-        <Link to="/chat" className={styles["chat__msg"]}>
+        <Link
+          to="/chat"
+          onClick={() => dispatch(clearChatRoomAndLocalStorage())}
+          className={styles["chat__msg"]}
+        >
           <h2>Back</h2>
         </Link>
         <section className={styles["chat__message__header"]}>

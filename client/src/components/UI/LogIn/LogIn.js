@@ -108,7 +108,6 @@ const LogIn = () => {
             id="button"
             type="submit"
             className={styles["login__form__btn"]}
-            // disabled="disabled" //some testing here
           >
             Log In
           </button>

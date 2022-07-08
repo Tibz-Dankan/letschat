@@ -1,12 +1,15 @@
 import React, { Fragment } from "react";
 import styles from "./Modal.module.scss";
 import { RiCloseLine } from "react-icons/ri";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { hideNotificationModal } from "../../../store/actions/notification";
 
-const Modal = ({ isErrorMessage, notificationMessage }) => {
-  // TODO:  actions to open and close the modal
+const Modal = ({ isErrorMessage }) => {
+  const notificationMessage = useSelector(
+    (state) => state.notification.notificationMsg
+  );
   const dispatch = useDispatch();
+
   return (
     <Fragment>
       <div

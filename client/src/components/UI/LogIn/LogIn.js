@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
@@ -22,7 +21,6 @@ const LogIn = () => {
     (state) => state.notification.value
   );
   const [isError, setIsError] = useState(false);
-  const [notificationMessage, setNotificationMessage] = useState("");
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -58,7 +56,6 @@ const LogIn = () => {
       setIsLoading(false);
       disableEnableButton("button", false);
       setIsError(true);
-      setNotificationMessage(error.message);
       log("error msg: " + error.message);
     }
   };
@@ -66,12 +63,7 @@ const LogIn = () => {
   return (
     <Fragment>
       <div className={styles["login__container"]}>
-        {showNotificationModal && (
-        <Modal
-          isErrorMessage={isError}
-          notificationMessage={notificationMessage}
-        />
-        )}
+        {showNotificationModal && <Modal isErrorMessage={isError} />}
         <div className={styles["fade__loader__container"]}>
           {isLoading && <FadeLoader />}
         </div>

@@ -7,6 +7,7 @@ import { FadeLoader } from "react-spinners";
 import { signup } from "../../store/actions/auth";
 import { disableEnableButton } from "../../utils/disableEnableButton";
 import { log } from "../../utils/consoleLog";
+import Modal from "../../components/UI/Modal/Modal";
 import styles from "./SignUp.module.scss";
 
 const SignUp = () => {
@@ -22,7 +23,6 @@ const SignUp = () => {
     (state) => state.notification.value
   );
   const [isError, setIsError] = useState(false);
-  const [notificationMessage, setNotificationMessage] = useState("");
 
   const handleUserNameChange = (event) => {
     setUserName(event.target.value);
@@ -52,6 +52,12 @@ const SignUp = () => {
     }
   };
 
+  const navigateToHomePage = () => {
+    setTimeout(() => {
+      navigate("/", { replace: true });
+    }, 2000);
+  };
+
   const handleSignUpSubmit = async (event) => {
     event.preventDefault();
     if (!userName || !email || !password) return;
@@ -61,26 +67,19 @@ const SignUp = () => {
       await dispatch(signup(userName, email, password));
       setIsLoading(false);
       disableEnableButton("button", false);
-      // dispatch an alert msg here
-      navigate("/", { replace: true });
+      navigateToHomePage();
     } catch (error) {
       setIsLoading(false);
       disableEnableButton("button", false);
       setIsError(true);
-      setNotificationMessage(error.message);
-      log("error msg: ", error.message);
+      log("error msg: " + error.message);
     }
   };
 
   return (
     <Fragment>
       <div className={styles["signup__container"]}>
-        {showNotificationModal && (
-          <Modal
-            isErrorMessage={isError}
-            notificationMessage={notificationMessage}
-          />
-        )}
+        {showNotificationModal && <Modal isErrorMessage={isError} />}
         <div className={styles["fade__loader__container"]}>
           {isLoading && <FadeLoader size={5} />}
         </div>

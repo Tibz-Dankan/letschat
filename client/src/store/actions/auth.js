@@ -2,6 +2,7 @@
 import { baseUrl } from "../appStore";
 import axios from "axios";
 import { authActions } from "../reducers/auth";
+import { notificationActions } from "../reducers/notification";
 import { log } from "../../utils/consoleLog";
 
 export const logOut = () => {
@@ -28,6 +29,7 @@ export const login = (email, password) => {
     log(response);
     if (response.data.errorMessage) {
       //   Dispatch an alert msg in the model
+      await dispatch(notificationActions.showNotification());
       throw new Error(response.data.errorMessage);
     }
     // get the expiry time  // to be done later
@@ -53,6 +55,7 @@ export const signup = (userName, email, password) => {
     log(response);
     if (response.data.errorMessage) {
       // dispatch an alert msg with the user via a modal
+      await dispatch(notificationActions.showNotification());
       throw new Error(response.data.errorMessage);
     }
     if (response.data.status === "success") {

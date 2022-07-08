@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { IconContext } from "react-icons";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
@@ -18,6 +18,11 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   let navigate = useNavigate();
   const dispatch = useDispatch();
+  const showNotificationModal = useSelector(
+    (state) => state.notification.value
+  );
+  const [isError, setIsError] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
 
   const handleUserNameChange = (event) => {
     setUserName(event.target.value);
@@ -61,6 +66,8 @@ const SignUp = () => {
     } catch (error) {
       setIsLoading(false);
       disableEnableButton("button", false);
+      setIsError(true);
+      setNotificationMessage(error.message);
       log("error msg: ", error.message);
     }
   };
@@ -68,6 +75,12 @@ const SignUp = () => {
   return (
     <Fragment>
       <div className={styles["signup__container"]}>
+        {showNotificationModal && (
+          <Modal
+            isErrorMessage={isError}
+            notificationMessage={notificationMessage}
+          />
+        )}
         <div className={styles["fade__loader__container"]}>
           {isLoading && <FadeLoader size={5} />}
         </div>

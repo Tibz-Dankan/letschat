@@ -1,25 +1,31 @@
 /* eslint-disable no-unused-vars */
 import { baseUrl } from "../appStore";
-import axios from "axios";
+// import axios from "axios";
 import { usersActions } from "../reducers/users";
 import { log } from "../../utils/consoleLog";
 
 export const getUsers = (user_id, token) => {
   return async (dispatch) => {
-    const response = await axios.get(`${baseUrl}/chat/${user_id}`, {
-      headers: {
+    const response = await fetch(`${baseUrl}/api/chats/users/${user_id}`, {
+      method: "GET",
+      headers: new Headers({
         Authorization: "Bearer " + token,
-      },
+      }),
     });
+
     log(response);
-    if (response.data.errorMessage) {
-      //   Dispatch an alert msg in the model when user data is not fetched
-      throw new Error(response.data.errorMessage);
+    if (!response.ok) {
+      const error = await response.json();
+      console.log("error");
+      console.log(error);
+      // dispatch message here
+      throw new Error(error.message);
     }
-    // data the data in the state here
-    console.log(response.data);
+    const data = await response.json();
+    console.log("Response data");
+    console.log(data);
     // update user info in the global state
-    await dispatch(usersActions.registeredUsers({ users: response.data }));
+    await dispatch(usersActions.registeredUsers({ users: data }));
   };
 };
 

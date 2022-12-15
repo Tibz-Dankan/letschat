@@ -1,9 +1,10 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const emailExistence = require("email-existence");
 const crypto = require("crypto");
-const { AppError } = require("../utils/error");
+const AppError = require("../utils/error");
+
+const { asyncHandler } = require("../utils/asyncHandler");
 require("dotenv").config();
 
 const assignToken = (userId) => {
@@ -20,17 +21,9 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
-// const checkEmailExistence = (email, next) => {
-//   emailExistence.check(email, (error, response) => {
-//     if (error)
-//       return next(AppError("error occurred during email validation", 500));
-//     if (!response) return next(AppError("Invalid email validation", 403));
-//     console.log("Email Validation status: " + response);
-//   });
-// };
-
 const createUserSendResponse = async (
   res,
+  next,
   name,
   email,
   password,
@@ -38,44 +31,36 @@ const createUserSendResponse = async (
   token
 ) => {
   const user = await User.getUserByEmail(email);
-  if (user.rows[0]) return res.json({ errorMessage: "Email already exists" });
+  if (user.rows[0]) return next(new AppError("Email already exists", 400));
   await User.createUser(name, email, password, isVerified, token);
   res.status(201).json({ status: "success" });
 };
 
-const signup = async (req, res, next) => {
+const signup = asyncHandler(async (req, res, next) => {
   const userName = req.body.userName;
   const email = req.body.email;
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   const isVerifiedEmail = false;
   const token = crypto.randomBytes(16).toString("hex");
-  // check email existence
-  await emailExistence.check(email, async (error, response) => {
-    if (error)
-      return res.json({
-        errorMessage: "An error occurred during email validation",
-      });
-    if (!response) return res.json({ errorMessage: "Invalid email" });
-    createUserSendResponse(
-      res,
-      userName,
-      email,
-      hashedPassword,
-      isVerifiedEmail,
-      token
-    );
-    console.log("Email Validation status: " + response);
-  });
-};
 
-const login = async (req, res, next) => {
+  createUserSendResponse(
+    res,
+    next,
+    userName,
+    email,
+    hashedPassword,
+    isVerifiedEmail,
+    token
+  );
+});
+
+const login = asyncHandler(async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const user = await User.getUserByEmail(email);
-  if (!user.rows[0]) return res.json({ errorMessage: "Email does not exist" });
-
+  if (!user.rows[0]) return next(new AppError("Email does not exist", 403));
   if (!(await bcrypt.compare(password, user.rows[0].password))) {
-    return res.json({ errorMessage: "Incorrect password" });
+    return next(new AppError("Incorrect password", 403));
   }
   const userObject = {
     userId: user.rows[0].user_id,
@@ -83,7 +68,7 @@ const login = async (req, res, next) => {
     email: user.rows[0].email,
   };
   createSendToken(userObject, 200, res);
-};
+});
 
 // TODO: forgot password, update password
 

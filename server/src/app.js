@@ -3,6 +3,7 @@ const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const { chatTextMessages } = require("./controllers/chatController");
+const { errorHandler } = require("./controllers/errorController");
 
 const app = express();
 
@@ -13,7 +14,7 @@ if (process.env.NODE_ENV === "production") {
   url = PRODUCTION_URL;
 } else {
   app.use(cors());
-  url = "http://localhost:3000";
+  url = "http://localhost:5173";
 }
 
 const http = require("http");
@@ -28,14 +29,20 @@ const io = new Server(server, {
 
 app.use(express.json());
 
-// user routes
-app.use("/", userRoutes);
-
-// chat routes
-app.use("/", chatRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/chats", chatRoutes);
 
 // chats
 chatTextMessages(io);
+
+app.use(errorHandler);
+
+app.use("*", (req, res) => {
+  res.status(404).json({
+    status: "error end point not found!",
+    message: req.originalUrl,
+  });
+});
 
 const PORT = process.env.PORT || 5000;
 

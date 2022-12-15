@@ -1,5 +1,7 @@
 const User = require("../models/user");
 const Chat = require("../models/chat");
+const AppError = require("../utils/error");
+const { asyncHandler } = require("../utils/asyncHandler");
 require("dotenv").config();
 
 const sortUserInfoSendResponse = (usersArray, res) => {
@@ -14,24 +16,25 @@ const sortUserInfoSendResponse = (usersArray, res) => {
   return res.status(200).json(users);
 };
 
-const getUsers = async (req, res, next) => {
+const getUsers = asyncHandler(async (req, res, next) => {
   const userId = req.params.user_id;
-  if (!userId || userId === undefined)
-    return res.json({ errorMessage: "No users id is provided" });
+  if (!userId || userId === undefined) {
+    return next(new AppError("No users id is provided", 400));
+  }
   const users = await User.getAllUsersExceptMe(req.params.user_id);
-  if (!users.rows[0]) return res.json({ errorMessage: "No users found" });
+  if (!users.rows[0]) return next(new AppError("No users found", 404));
   const usersArray = users.rows;
   sortUserInfoSendResponse(usersArray, res);
   console.log("Getting users to chat with");
-};
+});
 
-const getChatMessages = async (req, res, next) => {
+const getChatMessages = asyncHandler(async (req, res, next) => {
   const chatRoomId = req.params.chat_room_id;
-  if (!chatRoomId) return res.json({ errorMessage: "No chat room id" });
+  if (!chatRoomId) return next(new AppError("No chat room id", 403));
   const response = await Chat.getChatMessagesByChatRoomId(chatRoomId);
   res.status(200).json({ status: "success", data: response.rows });
   console.log("User getting chat messages");
-};
+});
 
 const storeChatMessagesInDatabase = async (
   senderId,

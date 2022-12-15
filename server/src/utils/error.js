@@ -1,11 +1,14 @@
-const AppError = (message, statusCode) => {
-  message;
+class AppError extends Error {
   statusCode;
-  let status;
-  const statusCodeString = statusCode.toString();
-  status = `${statusCodeString}`.startsWith("4") ? "fail" : "error";
-  Error.captureStackTrace(this, AppError);
-};
-// AppError("The message error", 400);
+  status;
+  isOperational;
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode = statusCode;
+    this.status = `${statusCode}`.startsWith("4") ? "fail" : "error";
+    this.isOperational = true;
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
 
-module.exports = { AppError };
+module.exports = AppError;

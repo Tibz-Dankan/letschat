@@ -56,7 +56,7 @@ const LogIn = () => {
       setIsLoading(false);
       disableEnableButton("button", false);
       setIsError(true);
-      log("error msg: " + error.message);
+      // log("error msg: " + error.message);
     }
   };
 

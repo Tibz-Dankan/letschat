@@ -1,20 +1,27 @@
-const db = require("../database/dbConfig");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 const Chat = {};
 
-//  store chat messages
-Chat.storeChatMessages = (senderId, recipientId, chatRoomId, date, message) => {
-  return db.query(
-    "INSERT INTO chat_messages(sender_id, recipient_id, chat_room_id, date, message) VALUES($1,$2,$3,$4,$5)  RETURNING *",
-    [senderId, recipientId, chatRoomId, date, message]
-  );
+Chat.saveMessage = async (chatObj) => {
+  return await prisma.chat.create({
+    // data: {
+    //   senderId: chatObj.senderId,
+    //   recipientId: chatObj.recipient,
+    //   chatRoomId: chatObj.chatRoomId,
+    //   date: chatObj.date,
+    //   message: chatObj.message,
+    // },
+    data: chatObj,
+  });
 };
 
-// Get chat messages by chat-room-id
-Chat.getChatMessagesByChatRoomId = (chatRoomId) => {
-  return db.query("SELECT * FROM chat_messages WHERE chat_room_id =$1", [
-    chatRoomId,
-  ]);
+Chat.findMessagesByChatRoomId = async (chatRoomId) => {
+  return await prisma.chat.findFirst({
+    where: {
+      chatRoomId: { equals: chatRoomId },
+    },
+  });
 };
 
 module.exports = Chat;

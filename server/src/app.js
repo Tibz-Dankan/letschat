@@ -4,7 +4,6 @@ const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const { chatTextMessages } = require("./controllers/chatController");
 const { errorHandler } = require("./controllers/errorController");
-
 const app = express();
 
 let url;

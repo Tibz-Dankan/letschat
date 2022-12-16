@@ -1,59 +1,61 @@
-const db = require("../database/dbConfig");
+const bcrypt = require("bcrypt");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 const User = {};
 
-// create user
-User.createUser = (
-  userName,
-  email,
-  hashedPassword,
-  isVerifiedEmail,
-  userVerifyToken
-) => {
-  return db.query(
-    "INSERT INTO users(user_name, email, password, is_verified_email, user_verify_token) VALUES($1,$2,$3,$4,$5)  RETURNING *",
-    [userName, email, hashedPassword, isVerifiedEmail, userVerifyToken]
-  );
+User.create = async (userObj) => {
+  userObj.password = await bcrypt.hash(userObj.password, 10);
+
+  return await prisma.user.create({
+    data: userObj,
+    select: {
+      userIndex: true,
+      userId: true,
+      userName: true,
+      email: true,
+    },
+  });
 };
 
-// Get user by Id
-User.getUserById = (userId) => {
-  return db.query("SELECT * FROM users WHERE user_id =$1", [userId]);
+User.comparePasswords = async (password, dbPassword) => {
+  return await bcrypt.compare(password, dbPassword);
 };
 
-// Get user by Email
-User.getUserByEmail = (email) => {
-  return db.query("SELECT * FROM users WHERE email =$1", [email]);
-};
-// Get user by verify_token
-User.getUserByToken = (token) => {
-  return db.query("SELECT * FROM users WHERE user_verify_token =$1", [token]);
-};
-
-// Get all users
-User.getAllUsers = () => {
-  return db.query("SELECT * FROM users");
+User.findUserById = async (userId) => {
+  return await prisma.user.findFirst({
+    where: {
+      userId: { equals: userId.toString() },
+    },
+  });
 };
 
-// Get all users
-User.getAllUsersExceptMe = (userId) => {
-  return db.query("SELECT * FROM users WHERE user_id !=$1", [userId]);
+User.findUserByEmail = async (email) => {
+  return await prisma.user.findFirst({
+    where: {
+      email: { equals: email },
+    },
+  });
 };
 
-// update password
-User.updatePassword = (newHashedPassword, userId, userEmail) => {
-  return db.query(
-    "UPDATE users SET password = $1 WHERE user_id = $2 AND email =$3 RETURNING *",
-    [newHashedPassword, userId, userEmail]
-  );
+User.findUsers = async () => {
+  return await prisma.user.findMany();
 };
 
-// update verify Token
-User.updateVerifyToken = (userId, verifyToken) => {
-  return db.query(
-    "UPDATE users SET user_verify_token = $1 WHERE user_id = $2 RETURNING *",
-    [verifyToken, userId]
-  );
+User.findUsersExceptMe = async (userId) => {
+  return await prisma.user.findMany({
+    where: {
+      userId: { not: userId.toString() },
+    },
+  });
 };
+
+// // update password
+// User.updatePassword = (newHashedPassword, userId, userEmail) => {
+//   return db.query(
+//     "UPDATE users SET password = $1 WHERE user_id = $2 AND email =$3 RETURNING *",
+//     [newHashedPassword, userId, userEmail]
+//   );
+// };
 
 module.exports = User;

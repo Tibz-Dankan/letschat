@@ -19,17 +19,21 @@ const ChatMessages = ({ socket }) => {
   const [messages, setMessages] = useState([]);
   const effectRan = useRef(false);
   const authToken = useSelector((state) => state.auth.token);
-  const imageUrl = useSelector((state) => state.users.chatWithUser.image_url);
-  const chatWithUserId = useSelector(
-    (state) => state.users.chatWithUser.user_id
+  const imageUrl = useSelector((state) => state.users.chatWithUser.imageUrl);
+  const chatWithUserIndex = useSelector(
+    (state) => state.users.chatWithUser.userIndex
   );
+  const chatWithUserId = useSelector(
+    (state) => state.users.chatWithUser.userId
+  );
+  const currentUserIndex = useSelector((state) => state.auth.user.userIndex);
   const currentUserId = useSelector((state) => state.auth.user.userId);
-  const chatRoomId = generateChatRoomId(chatWithUserId, currentUserId);
+  const chatRoomId = generateChatRoomId(chatWithUserIndex, currentUserIndex);
   log("chat room Id: " + chatRoomId); // to be removed
   const dispatch = useDispatch();
 
   const getChatMessages = async () => {
-    const ChatRoomId = generateChatRoomId(currentUserId, chatWithUserId);
+    const ChatRoomId = generateChatRoomId(currentUserIndex, chatWithUserIndex);
     if (!chatRoomId) {
       // dispatch alert msg with a reload button // should be a function
       alert("No chat Room Id");
@@ -87,7 +91,7 @@ const ChatMessages = ({ socket }) => {
 
   // function to send text message to the server
   const msgObject = {
-    chatRoomId: generateChatRoomId(chatWithUserId, currentUserId),
+    chatRoomId: generateChatRoomId(chatWithUserIndex, currentUserIndex),
     senderId: currentUserId,
     recipientId: chatWithUserId,
     date: JSON.stringify({ date: new Date(Date.now()) }),
@@ -126,12 +130,12 @@ const ChatMessages = ({ socket }) => {
         </Link>
         <section className={styles["chat__message__header"]}>
           <div className={styles["image___icon__container"]}>
-            {!useSelector((state) => state.users.chatWithUser.image_url) && (
+            {!useSelector((state) => state.users.chatWithUser.imageUrl) && (
               <IconContext.Provider value={{ size: "2.5em" }}>
                 <CgProfile className={styles["image__icon"]} />
               </IconContext.Provider>
             )}
-            {useSelector((state) => state.users.chatWithUser.image_url) && (
+            {useSelector((state) => state.users.chatWithUser.imageUrl) && (
               <div className={styles["user__image__container"]}>
                 <img
                   src={imageUrl}
@@ -142,7 +146,7 @@ const ChatMessages = ({ socket }) => {
             )}
           </div>
           <div className={styles["chat__with__user__name"]}>
-            <p>{useSelector((state) => state.users.chatWithUser.user_name)}</p>
+            <p>{useSelector((state) => state.users.chatWithUser.userName)}</p>
           </div>
           <div className={styles["chat__with__calls__container"]}>
             <div className={styles["video__call"]}>
@@ -165,7 +169,7 @@ const ChatMessages = ({ socket }) => {
                 key={new Date(JSON.parse(msgObject.date).date)}
                 id={styles["message"]}
                 className={
-                  currentUserId === msgObject.senderId
+                  currentUserIndex === msgObject.senderId
                     ? styles["my__message"]
                     : styles["other__message"]
                 }

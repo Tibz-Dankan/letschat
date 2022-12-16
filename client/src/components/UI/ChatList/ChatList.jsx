@@ -11,11 +11,14 @@ import { generateChatRoomId } from "../../../utils/generateChatRoomId";
 const ChatList = ({ socket }) => {
   const users = useSelector((state) => state.users.users);
   const dispatch = useDispatch();
-  const currentUserId = useSelector((state) => state.auth.user.userId);
+  const currentUserIndex = useSelector((state) => state.auth.user.userId);
 
   // Join chat room
   const joinRoom = async (chatWithUser) => {
-    const chatRoomId = generateChatRoomId(currentUserId, chatWithUser.user_id);
+    const chatRoomId = generateChatRoomId(
+      currentUserIndex,
+      chatWithUser.userIndex
+    );
     await dispatch(updateChatWithUserData(chatWithUser));
     socket.emit("joinRoom", chatRoomId);
   };
@@ -25,20 +28,20 @@ const ChatList = ({ socket }) => {
       <div className={styles["chat__list__wrapper"]}>
         {users.map((user) => {
           return (
-            <div key={user.user_id} className={styles["chat__list"]}>
-              {!user.image_url && (
+            <div key={user.userId} className={styles["chat__list"]}>
+              {!user.imageUrl && (
                 <IconContext.Provider value={{ size: "2.5em" }}>
                   <div className={styles["image__icon__container"]}>
                     <CgProfile className={styles["image__icon"]} />
                   </div>
                 </IconContext.Provider>
               )}
-              {user.image_url && (
+              {user.imageUrl && (
                 <div className={styles["user__image"]}>
-                  <img src={user.image_url} alt="Profile pic" />
+                  <img src={user.imageUrl} alt="Profile pic" />
                 </div>
               )}
-              <div className={styles["user__name"]}>{user.user_name}</div>
+              <div className={styles["user__name"]}>{user.userName}</div>
               <Link to="/chat-room">
                 <div
                   onClick={() => joinRoom(user)}

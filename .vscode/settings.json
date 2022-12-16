@@ -1,6 +1,4 @@
 {
-  "cSpell.words": ["tibs"],
-
   "[prisma]": { "editor.defaultFormatter": "Prisma.prisma" },
   "editor.formatOnSave": true
 }

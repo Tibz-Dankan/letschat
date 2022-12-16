@@ -1,9 +1,6 @@
 const User = require("../models/user");
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
 const AppError = require("../utils/error");
-
 const { asyncHandler } = require("../utils/asyncHandler");
 require("dotenv").config();
 
@@ -21,53 +18,33 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
-const createUserSendResponse = async (
-  res,
-  next,
-  name,
-  email,
-  password,
-  isVerified,
-  token
-) => {
-  const user = await User.getUserByEmail(email);
-  if (user.rows[0]) return next(new AppError("Email already exists", 400));
-  await User.createUser(name, email, password, isVerified, token);
-  res.status(201).json({ status: "success" });
-};
-
 const signup = asyncHandler(async (req, res, next) => {
-  const userName = req.body.userName;
+  console.log("request body");
+  console.log(req.body);
   const email = req.body.email;
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
-  const isVerifiedEmail = false;
-  const token = crypto.randomBytes(16).toString("hex");
+  const user = await User.findUserByEmail(email);
 
-  createUserSendResponse(
-    res,
-    next,
-    userName,
-    email,
-    hashedPassword,
-    isVerifiedEmail,
-    token
-  );
+  if (user) return next(new AppError("Email already exists", 400));
+  const newUser = await User.create(req.body);
+  createSendToken(newUser, 201, res);
 });
 
 const login = asyncHandler(async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  const user = await User.getUserByEmail(email);
-  if (!user.rows[0]) return next(new AppError("Email does not exist", 403));
-  if (!(await bcrypt.compare(password, user.rows[0].password))) {
+
+  const user = await User.findUserByEmail(email);
+  if (!user) return next(new AppError("Email does not exist", 403));
+  if (!(await User.comparePasswords(password, user.password))) {
     return next(new AppError("Incorrect password", 403));
   }
-  const userObject = {
-    userId: user.rows[0].user_id,
-    userName: user.rows[0].user_name,
-    email: user.rows[0].email,
+  const userObj = {
+    userIndex: user.userIndex,
+    userId: user.userId,
+    userName: user.userName,
+    email: user.email,
   };
-  createSendToken(userObject, 200, res);
+  createSendToken(userObj, 200, res);
 });
 
 // TODO: forgot password, update password

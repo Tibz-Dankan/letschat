@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userIndex Int       @default(autoincrement())
+  userId    String    @id @default(uuid())
+  userName  String
+  email     String    @unique
+  password  String
+  imageUrl  String?
+  createdAt DateTime  @default(now())
+  updateAt  DateTime? @updatedAt
+  sender    Chat[]    @relation("sender")
+  recipient Chat[]    @relation("recipient")
+}
+
+model Chat {
+  messageId   String  @id @default(uuid())
+  sender      User    @relation("sender", fields: [senderId], references: [userId])
+  senderId    String
+  recipient   User    @relation("recipient", fields: [recipientId], references: [userId])
+  recipientId String
+  chatRoomId  String
+  date        String
+  message     String
+  isDelivered Boolean @default(false)
+  isRead      Boolean @default(false)
+}
+
+// IMPORTANT COMMNANDS 
+
+// INITIALIZE PRISMA
+// npx prisma init --datasource-provider postgresql
+
+// APPLY CHANGES TO ACTUAL DATABASE 
+// npx prisma migrate dev --name test1
+
+// GENERATE THE CLIENT TO INTERACT WITH THE DATABASE
+// npx prisma generate
+
+// TO EXPLORE AND MANUPLATE DATA USE PRISMA STUDIO
+// npx prisma studio

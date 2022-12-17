@@ -22,3 +22,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
 
 export { baseUrl };
 export default store;
+export const authActions = authSlice.actions;
+export const usersActions = usersSlice.actions;
+export const chatActions = chatSlice.actions;
+export const notificationActions = notificationSlice.actions;

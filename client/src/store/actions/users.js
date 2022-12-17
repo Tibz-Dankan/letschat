@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { baseUrl } from "../appStore";
-// import axios from "axios";
-import { usersActions } from "../reducers/users";
+import { baseUrl } from "../store";
+import { usersActions } from "../store";
 import { log } from "../../utils/consoleLog";
 
 export const getUsers = (user_id, token) => {

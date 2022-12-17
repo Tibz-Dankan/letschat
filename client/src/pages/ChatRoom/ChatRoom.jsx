@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useEffect, useRef } from "react";
-import { usersActions } from "../../store/reducers/users";
+import { usersActions } from "../../store/store";
 import { useSelector, useDispatch } from "react-redux";
 import { log } from "../../utils/consoleLog";
 import { generateChatRoomId } from "../../utils/generateChatRoomId";

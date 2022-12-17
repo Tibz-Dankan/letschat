@@ -19,5 +19,4 @@ export const notificationSlice = createSlice({
   },
 });
 
-export const notificationActions = notificationSlice.actions;
 export default notificationSlice;

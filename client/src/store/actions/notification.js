@@ -1,4 +1,4 @@
-import { notificationActions } from "../reducers/notification";
+import { notificationActions } from "../store";
 
 export const hideNotificationModal = () => {
   return async (dispatch) => {

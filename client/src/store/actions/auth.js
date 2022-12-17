@@ -1,7 +1,6 @@
-import { baseUrl } from "../appStore";
-import axios from "axios";
-import { authActions } from "../reducers/auth";
-import { notificationActions } from "../reducers/notification";
+import { baseUrl } from "../store";
+import { authActions } from "../store";
+import { notificationActions } from "../store";
 import { log } from "../../utils/consoleLog";
 
 export const logOut = () => {

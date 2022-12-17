@@ -3,7 +3,7 @@ import React, { useState, useEffect, Fragment, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { log } from "../../../utils/consoleLog";
-import { baseUrl } from "../../../store/appStore";
+import { baseUrl } from "../../../store/store";
 import { generateChatRoomId } from "../../../utils/generateChatRoomId";
 import { clearChatRoomAndLocalStorage } from "../../../store/actions/users";
 import { IoMdVideocam } from "react-icons/io";
@@ -40,15 +40,6 @@ const ChatMessages = ({ socket }) => {
       return;
     }
     try {
-      // const response = await axios.get(
-      //   `${baseUrl}/chat-messages/${ChatRoomId}`,
-      //   {
-      //     headers: {
-      //       Authorization: "Bearer " + authToken,
-      //     },
-      //   }
-      // );
-
       const response = await fetch(
         `${baseUrl}/api/chats/chat-messages/${ChatRoomId}`,
         {

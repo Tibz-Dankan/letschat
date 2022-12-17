@@ -17,7 +17,7 @@ Chat.saveMessage = async (chatObj) => {
 };
 
 Chat.findMessagesByChatRoomId = async (chatRoomId) => {
-  return await prisma.chat.findFirst({
+  return await prisma.chat.findMany({
     where: {
       chatRoomId: { equals: chatRoomId },
     },

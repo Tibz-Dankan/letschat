@@ -11,14 +11,14 @@ import { IoCallSharp } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import { GiPlayButton } from "react-icons/gi";
 import { IconContext } from "react-icons";
-import axios from "axios";
+// import axios from "axios";
 import styles from "./ChatMessages.module.scss";
 
 const ChatMessages = ({ socket }) => {
   const [text, setText] = useState("");
   const [messages, setMessages] = useState([]);
   const effectRan = useRef(false);
-  const authToken = useSelector((state) => state.auth.token);
+  const token = useSelector((state) => state.auth.token);
   const imageUrl = useSelector((state) => state.users.chatWithUser.imageUrl);
   const chatWithUserIndex = useSelector(
     (state) => state.users.chatWithUser.userIndex
@@ -40,23 +40,38 @@ const ChatMessages = ({ socket }) => {
       return;
     }
     try {
-      const response = await axios.get(
-        `${baseUrl}/chat-messages/${ChatRoomId}`,
+      // const response = await axios.get(
+      //   `${baseUrl}/chat-messages/${ChatRoomId}`,
+      //   {
+      //     headers: {
+      //       Authorization: "Bearer " + authToken,
+      //     },
+      //   }
+      // );
+
+      const response = await fetch(
+        `${baseUrl}/api/chats/chat-messages/${ChatRoomId}`,
         {
-          headers: {
-            Authorization: "Bearer " + authToken,
-          },
+          method: "GET",
+          headers: new Headers({
+            "Content-type": "application/json",
+            Authorization: "Bearer " + token,
+          }),
         }
       );
       console.log("chat messages from the server");
       console.log(response);
-      if (response.data.errorMessage) {
+      if (!response.ok) {
+        const error = await response.json();
         //   Dispatch an alert msg in the model // should be a function
-        throw new Error(response.data.errorMessage);
+        throw new Error(error.message);
       }
-      setMessages(response.data.data);
+      const data = await response.json();
+      console.log("data");
+      console.log(data);
+      setMessages(data.data);
     } catch (error) {
-      log("Error msg:" + error.message);
+      log("error:" + error.message);
     }
   };
 

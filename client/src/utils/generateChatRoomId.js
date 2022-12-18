@@ -1,10 +1,10 @@
-export const generateChatRoomId = (currentUserId, chatWithId) => {
+export const generateChatRoomId = (currentUserIndex, chatMateUserIndex) => {
   const areParametersNumbers =
-    Number.isInteger(currentUserId) && Number.isInteger(chatWithId);
+    Number.isInteger(currentUserIndex) && Number.isInteger(chatMateUserIndex);
   if (areParametersNumbers === false) return;
-  if (currentUserId > chatWithId) {
-    return "ctR" + chatWithId + "&" + currentUserId + "td";
+  if (currentUserIndex > chatMateUserIndex) {
+    return "ctR" + chatMateUserIndex + "&" + currentUserIndex + "td";
   } else {
-    return "ctR" + currentUserId + "&" + chatWithId + "td";
+    return "ctR" + currentUserIndex + "&" + chatMateUserIndex + "td";
   }
 };

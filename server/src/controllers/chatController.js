@@ -49,23 +49,6 @@ const getChatMessages = asyncHandler(async (req, res, next) => {
   console.log("User getting chat messages");
 });
 
-// const storeChatMessagesInDatabase = async (
-//   senderId,
-//   recipientId,
-//   chatRoomId,
-//   date,
-//   message
-// ) => {
-//   await Chat.storeChatMessages(
-//     senderId,
-//     recipientId,
-//     chatRoomId,
-//     date,
-//     message
-//   );
-//   console.log("chat message stored in the database");
-// };
-
 const saveChatMessages = async (chatObj) => {
   await Chat.saveMessage(chatObj);
   console.log("chat saved");
@@ -73,20 +56,20 @@ const saveChatMessages = async (chatObj) => {
 
 // Join room
 const joinRoom = (socket) => {
-  socket.on("joinRoom", (data) => {
-    socket.join(data);
-    console.log("User joined room with Id#: " + data);
+  socket.on("joinRoom", (chatRoomId) => {
+    socket.join(chatRoomId);
+    console.log("User joined room with Id#: " + chatRoomId);
   });
 };
 
 //receive and Send messages
 const receiveSendMessages = (socket) => {
-  socket.on("sendMessage", (data) => {
+  socket.on("sendMessage", (msgObj) => {
     console.log("Message sent: ");
-    console.log(data);
-    socket.to(data.chatRoomId).emit("receiveMessage", data);
+    console.log(msgObj);
+    socket.to(msgObj.chatRoomId).emit("receiveMessage", msgObj);
     // save chat message in the in the database
-    saveChatMessages(data);
+    saveChatMessages(msgObj);
   });
 };
 
@@ -98,7 +81,7 @@ const leaveRoom = (socket) => {
 };
 
 //TODO:  function below to be renamed to chatHandler
-const chatTextMessages = (io) => {
+const chatHandler = (io) => {
   io.on("connection", (socket) => {
     console.log("socket id: " + socket.id);
     joinRoom(socket);
@@ -107,4 +90,4 @@ const chatTextMessages = (io) => {
   });
 };
 
-module.exports = { chatTextMessages, getUsers, getChatMates, getChatMessages };
+module.exports = { chatHandler, getUsers, getChatMates, getChatMessages };

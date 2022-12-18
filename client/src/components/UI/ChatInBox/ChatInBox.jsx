@@ -11,9 +11,9 @@ import { IoCallSharp } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import { GiPlayButton } from "react-icons/gi";
 import { IconContext } from "react-icons";
-import styles from "./ChatMessages.module.scss";
+import styles from "./ChatInBox.module.scss";
 
-const ChatMessages = ({ socket }) => {
+const ChatInBox = ({ socket }) => {
   const textRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const token = useSelector((state) => state.auth.token);
@@ -199,4 +199,4 @@ const ChatMessages = ({ socket }) => {
   );
 };
 
-export default ChatMessages;
+export default ChatInBox;

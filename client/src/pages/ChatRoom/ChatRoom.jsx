@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateChatMateData } from "../../store/actions/chat";
 // import { log } from "../../utils/consoleLog";
 import { generateChatRoomId } from "../../utils/generateChatRoomId";
-import ChatMessages from "../../components/UI/ChatMessages/ChatMessages";
+import ChatInBox from "../../components/UI/ChatInBox/ChatInBox";
 import styles from "./ChatRoom.module.scss";
 
 const ChatRoom = ({ socket }) => {
@@ -56,7 +56,7 @@ const ChatRoom = ({ socket }) => {
   return (
     <Fragment>
       <div className={styles["chat__room__container"]}>
-        <ChatMessages socket={socket} />
+        <ChatInBox socket={socket} />
       </div>
     </Fragment>
   );

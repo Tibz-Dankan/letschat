@@ -14,20 +14,10 @@ const ChatList = ({ socket }) => {
   const navigate = useNavigate();
   const currentUserIndex = useSelector((state) => state.auth.user.userId);
 
-  const saveChatMateToStorage = (chatMate) => {
-    localStorage.setItem(
-      "chatMateData",
-      JSON.stringify({
-        chatMate: chatMate,
-      })
-    );
-  };
-
   // Join chat room
   const joinRoom = async (chatMate) => {
     const chatRoomId = generateChatRoomId(currentUserIndex, chatMate.userIndex);
     await dispatch(updateChatMateData(chatMate));
-    saveChatMateToStorage(chatMate);
     socket.emit("joinRoom", chatRoomId);
     navigate("/chat-room", { replace: false });
   };

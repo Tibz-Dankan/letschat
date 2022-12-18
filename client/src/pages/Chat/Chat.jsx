@@ -1,12 +1,12 @@
 import React, { Fragment } from "react";
 import styles from "./Chat.module.scss";
-import Users from "../../components/UI/Users/Users";
+import ChatMates from "../../components/UI/ChatMates/ChatMates";
 
 const Chat = ({ socket }) => {
   return (
     <Fragment>
       <div className={styles["chat-page"]}>
-        <Users socket={socket} />
+        <ChatMates socket={socket} />
       </div>
     </Fragment>
   );

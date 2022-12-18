@@ -49,6 +49,8 @@ const login = asyncHandler(async (req, res, next) => {
 
 // TODO: forgot password, update password
 
+// TODO: explore users (users you haven't chatted with)
+
 module.exports = {
   signup,
   login,

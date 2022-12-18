@@ -29,6 +29,18 @@ const getUsers = asyncHandler(async (req, res, next) => {
   console.log("Getting users to chat with");
 });
 
+const getChatMates = asyncHandler(async (req, res, next) => {
+  // TODO: only fetch users recently chatted with
+  const userId = req.params.userId;
+  if (!userId) return next(new AppError("No users id is provided", 400));
+
+  const users = await User.findUsersExceptMe(req.params.userId);
+  if (!users) return next(new AppError("No users found", 404));
+  const usersArray = users;
+  sortUserInfoSendResponse(usersArray, res);
+  console.log("Getting users to chat with");
+});
+
 const getChatMessages = asyncHandler(async (req, res, next) => {
   const chatRoomId = req.params.chatRoomId;
   if (!chatRoomId) return next(new AppError("No chat room id", 403));
@@ -95,4 +107,4 @@ const chatTextMessages = (io) => {
   });
 };
 
-module.exports = { chatTextMessages, getUsers, getChatMessages };
+module.exports = { chatTextMessages, getUsers, getChatMates, getChatMessages };

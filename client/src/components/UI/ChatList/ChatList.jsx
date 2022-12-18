@@ -1,57 +1,64 @@
 import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "./ChatList.module.scss";
 import { IconContext } from "react-icons";
 import { CgProfile } from "react-icons/cg";
 import { SiGooglemessages } from "react-icons/si";
 import { useSelector, useDispatch } from "react-redux";
-import { updateChatWithUserData } from "../../../store/actions/users";
+import { updateChatMateData } from "../../../store/actions/chat";
 import { generateChatRoomId } from "../../../utils/generateChatRoomId";
 
 const ChatList = ({ socket }) => {
-  const users = useSelector((state) => state.users.users);
+  const chatMates = useSelector((state) => state.chat.allChatMates);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const currentUserIndex = useSelector((state) => state.auth.user.userId);
 
-  // Join chat room
-  const joinRoom = async (chatWithUser) => {
-    const chatRoomId = generateChatRoomId(
-      currentUserIndex,
-      chatWithUser.userIndex
+  const saveChatMateToStorage = (chatMate) => {
+    localStorage.setItem(
+      "chatMateData",
+      JSON.stringify({
+        chatMate: chatMate,
+      })
     );
-    await dispatch(updateChatWithUserData(chatWithUser));
+  };
+
+  // Join chat room
+  const joinRoom = async (chatMate) => {
+    const chatRoomId = generateChatRoomId(currentUserIndex, chatMate.userIndex);
+    await dispatch(updateChatMateData(chatMate));
+    saveChatMateToStorage(chatMate);
     socket.emit("joinRoom", chatRoomId);
+    navigate("/chat-room", { replace: false });
   };
 
   return (
     <Fragment>
       <div className={styles["chat__list__wrapper"]}>
-        {users.map((user) => {
+        {chatMates.map((chatMate) => {
           return (
-            <div key={user.userId} className={styles["chat__list"]}>
-              {!user.imageUrl && (
+            <div key={chatMate.userId} className={styles["chat__list"]}>
+              {!chatMate.imageUrl && (
                 <IconContext.Provider value={{ size: "2.5em" }}>
                   <div className={styles["image__icon__container"]}>
                     <CgProfile className={styles["image__icon"]} />
                   </div>
                 </IconContext.Provider>
               )}
-              {user.imageUrl && (
+              {chatMate.imageUrl && (
                 <div className={styles["user__image"]}>
-                  <img src={user.imageUrl} alt="Profile pic" />
+                  <img src={chatMate.imageUrl} alt="Profile pic" />
                 </div>
               )}
-              <div className={styles["user__name"]}>{user.userName}</div>
-              <Link to="/chat-room">
-                <div
-                  onClick={() => joinRoom(user)}
-                  className={styles["message__icon"]}
-                >
-                  <IconContext.Provider value={{ size: "1.5em" }}>
-                    <SiGooglemessages />
-                  </IconContext.Provider>
-                </div>
-              </Link>
+              <div className={styles["user__name"]}>{chatMate.userName}</div>
+              <div
+                onClick={() => joinRoom(chatMate)}
+                className={styles["message__icon"]}
+              >
+                <IconContext.Provider value={{ size: "1.5em" }}>
+                  <SiGooglemessages />
+                </IconContext.Provider>
+              </div>
             </div>
           );
         })}

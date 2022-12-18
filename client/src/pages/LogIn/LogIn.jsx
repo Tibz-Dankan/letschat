@@ -4,10 +4,10 @@ import { useNavigate, Link } from "react-router-dom";
 import { IconContext } from "react-icons";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FadeLoader } from "react-spinners";
-import { login } from "../../../store/actions/auth";
-import { disableEnableButton } from "../../../utils/disableEnableButton";
-import { log } from "../../../utils/consoleLog";
-import Modal from "../Modal/Modal";
+import { login } from "../../store/actions/auth";
+import { disableEnableButton } from "../../utils/disableEnableButton";
+import { log } from "../../utils/consoleLog";
+import Modal from "../../components/ui/Modal/Modal";
 import styles from "./LogIn.module.scss";
 
 const LogIn = () => {
@@ -50,8 +50,8 @@ const LogIn = () => {
       disableEnableButton("button", true);
       await dispatch(login(email, password));
       setIsLoading(false);
-      disableEnableButton("button", false);
-      navigate("/chat", { replace: true });
+      disableEnableButton("button", false); //TODO: to be modified
+      navigate("/", { replace: true });
     } catch (error) {
       setIsLoading(false);
       disableEnableButton("button", false);

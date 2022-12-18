@@ -1,44 +1,57 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { Fragment, useEffect, useRef } from "react";
-import { usersActions } from "../../store/store";
+import React, { Fragment, useEffect } from "react";
+import { Route, Navigate } from "react-router-dom";
+// import { usersActions } from "../../store/store";
 import { useSelector, useDispatch } from "react-redux";
-import { log } from "../../utils/consoleLog";
+import { updateChatMateData } from "../../store/actions/chat";
+// import { log } from "../../utils/consoleLog";
 import { generateChatRoomId } from "../../utils/generateChatRoomId";
 import ChatMessages from "../../components/UI/ChatMessages/ChatMessages";
 import styles from "./ChatRoom.module.scss";
 
 const ChatRoom = ({ socket }) => {
   const dispatch = useDispatch();
-  const effectRan = useRef(false);
+  // const effectRan = useRef(false);
 
-  const chatWithUserId = useSelector(
-    (state) => state.users.chatWithUser.user_id
+  const chatMateUserIndex = useSelector(
+    (state) => state.chat.chatMate.userIndex
   );
-  const currentUserId = useSelector((state) => state.auth.user.userId);
+  const currentUserIndex = useSelector((state) => state.auth.user.userIndex);
 
-  const updateChatWithUserData = () => {
-    dispatch(
-      usersActions.chatWithUser({
-        chatWithUser: JSON.parse(localStorage.getItem("chatWithUser")),
-      })
-    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const tryReconnect = async () => {
+    const chatMateData = localStorage.getItem("chatMateData");
+    if (!chatMateData) {
+      console.log("no  chatMate data");
+      return (
+        <Route path="/chat-room" element={<Navigate to="/chat" replace />} />
+      );
+    }
+    const parsedData = JSON.parse(chatMateData);
+    const { chatMate } = parsedData;
+    const chatRoomId = generateChatRoomId(currentUserIndex, chatMateUserIndex);
+    if (!chatRoomId) {
+      console.log("no chat room id");
+      return (
+        <Route path="/chat-room" element={<Navigate to="/chat" replace />} />
+      );
+    }
+    socket.emit("joinRoom", chatRoomId);
+    await dispatch(updateChatMateData(chatMate));
   };
-
   // update redux store and reconnect user to room on page reload
   if (performance.getEntriesByType("navigation")[0].type === "reload") {
-    updateChatWithUserData();
-    socket.emit("joinRoom", generateChatRoomId(currentUserId, chatWithUserId));
-    log("Reloading...  Reconnecting user to the Room");
+    tryReconnect();
+    // updateChatMateInfo();
+    // socket.emit(
+    //   "joinRoom",
+    //   generateChatRoomId(currentUserIndex, chatMateUserIndex)
+    // );
+    // log("Reloading...  Reconnecting user to the Room");
   }
 
   useEffect(() => {
-    if (effectRan.current === false) {
-      updateChatWithUserData();
-      return () => {
-        effectRan.current = true;
-      };
-    }
-  }, []);
+    tryReconnect();
+  }, [tryReconnect]);
 
   return (
     <Fragment>

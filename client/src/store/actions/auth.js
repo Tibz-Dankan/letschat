@@ -4,7 +4,7 @@ import { notificationActions } from "../store";
 import { log } from "../../utils/consoleLog";
 
 export const logOut = () => {
-  localStorage.removeItem("userData");
+  localStorage.clear();
   return authActions.logout();
 };
 
@@ -16,6 +16,13 @@ const saveDataToStorage = (user, token) => {
       user: user,
     })
   );
+};
+
+export const authenticate = (user, token) => {
+  return async (dispatch) => {
+    await dispatch(authActions.authenticate({ token: token, user: user }));
+    //  TODO: dispatch action to update expiry time to the logout timer
+  };
 };
 
 export const login = (email, password) => {
@@ -80,7 +87,7 @@ export const signup = (userName, email, password) => {
 
     await dispatch(
       notificationActions.showNotification({
-        notificationMsg: "Sign up successful",
+        notificationMsg: "Sign up successful, please login",
       })
     );
   };

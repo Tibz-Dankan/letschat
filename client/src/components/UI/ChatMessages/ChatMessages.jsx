@@ -1,5 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, Fragment, useRef } from "react";
+import React, { useState, useEffect, Fragment, useRef, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { log } from "../../../utils/consoleLog";
@@ -16,7 +16,6 @@ import styles from "./ChatMessages.module.scss";
 const ChatMessages = ({ socket }) => {
   const textRef = useRef(null);
   const [messages, setMessages] = useState([]);
-  const effectRan = useRef(false);
   const token = useSelector((state) => state.auth.token);
   const imageUrl = useSelector((state) => state.chat.chatMate.imageUrl);
   const chatMateUserIndex = useSelector(
@@ -28,48 +27,41 @@ const ChatMessages = ({ socket }) => {
   const chatRoomId = generateChatRoomId(chatMateUserIndex, currentUserIndex);
   log("chat room Id: " + chatRoomId); // to be removed
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // TODO: fetch messages via sockets
-  // TODO: implementation(listen on the frontend and emit on the backend)
-  const getChatMessages = async () => {
-    const ChatRoomId = generateChatRoomId(currentUserIndex, chatMateUserIndex);
-    if (!chatRoomId) return;
-    try {
-      const response = await fetch(
-        `${baseUrl}/api/chats/chat-messages/${ChatRoomId}`,
-        {
-          method: "GET",
-          headers: new Headers({
-            "Content-type": "application/json",
-            Authorization: "Bearer " + token,
-          }),
-        }
-      );
-      console.log("chat messages from the server");
-      console.log(response);
-      if (!response.ok) {
-        const error = await response.json();
-        //   Dispatch an alert msg in the model // should be a function
-        throw new Error(error.message);
-      }
-      const data = await response.json();
-      console.log("data");
-      console.log(data);
-      setMessages(data.data);
-    } catch (error) {
-      log("error:" + error.message);
+  const navigateToChat = () => {
+    if (!chatRoomId) {
+      return navigate("/chat", { replace: true });
     }
   };
+  navigateToChat();
 
-  useEffect(() => {
-    if (effectRan.current === false) {
-      getChatMessages();
-      console.log("fetching chat messages");
-      return () => {
-        effectRan.current = true;
-      };
-    }
-  }, []);
+  useMemo(() => {
+    const getChatMessages = async () => {
+      try {
+        const response = await fetch(
+          `${baseUrl}/api/chats/chat-messages/${chatRoomId}`,
+          {
+            method: "GET",
+            headers: new Headers({
+              "Content-type": "application/json",
+              Authorization: "Bearer " + token,
+            }),
+          }
+        );
+        if (!response.ok) {
+          const error = await response.json();
+          //   Dispatch an alert msg
+          throw new Error(error.message);
+        }
+        const data = await response.json();
+        setMessages(data.data);
+      } catch (error) {
+        log("error:" + error.message);
+      }
+    };
+    getChatMessages();
+  }, [chatRoomId, token]);
 
   // provides format  -> Sun Jul 03 2022;
   const getDateString = (dateObject) => {
@@ -106,15 +98,10 @@ const ChatMessages = ({ socket }) => {
 
   // Getting the text message from the server(backend)
   useEffect(() => {
-    if (effectRan.current === false) {
-      socket.on("receiveMessage", (msg) => {
-        log("chat messages: " + msg);
-        setMessages((msgList) => [...msgList, msg]);
-      });
-      return () => {
-        effectRan.current = true;
-      };
-    }
+    socket.on("receiveMessage", (msg) => {
+      log("chat messages: " + msg);
+      setMessages((msgList) => [...msgList, msg]);
+    });
   }, [socket]);
 
   return (

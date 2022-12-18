@@ -11,34 +11,29 @@ import { IoCallSharp } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import { GiPlayButton } from "react-icons/gi";
 import { IconContext } from "react-icons";
-// import axios from "axios";
 import styles from "./ChatMessages.module.scss";
 
 const ChatMessages = ({ socket }) => {
-  const [text, setText] = useState("");
+  const textRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const effectRan = useRef(false);
   const token = useSelector((state) => state.auth.token);
-  const imageUrl = useSelector((state) => state.users.chatWithUser.imageUrl);
-  const chatWithUserIndex = useSelector(
-    (state) => state.users.chatWithUser.userIndex
+  const imageUrl = useSelector((state) => state.chat.chatMate.imageUrl);
+  const chatMateUserIndex = useSelector(
+    (state) => state.chat.chatMate.userIndex
   );
-  const chatWithUserId = useSelector(
-    (state) => state.users.chatWithUser.userId
-  );
+  const chatMateUserId = useSelector((state) => state.chat.chatMate.userId);
   const currentUserIndex = useSelector((state) => state.auth.user.userIndex);
   const currentUserId = useSelector((state) => state.auth.user.userId);
-  const chatRoomId = generateChatRoomId(chatWithUserIndex, currentUserIndex);
+  const chatRoomId = generateChatRoomId(chatMateUserIndex, currentUserIndex);
   log("chat room Id: " + chatRoomId); // to be removed
   const dispatch = useDispatch();
 
+  // TODO: fetch messages via sockets
+  // TODO: implementation(listen on the frontend and emit on the backend)
   const getChatMessages = async () => {
-    const ChatRoomId = generateChatRoomId(currentUserIndex, chatWithUserIndex);
-    if (!chatRoomId) {
-      // dispatch alert msg with a reload button // should be a function
-      alert("No chat Room Id");
-      return;
-    }
+    const ChatRoomId = generateChatRoomId(currentUserIndex, chatMateUserIndex);
+    if (!chatRoomId) return;
     try {
       const response = await fetch(
         `${baseUrl}/api/chats/chat-messages/${ChatRoomId}`,
@@ -76,10 +71,6 @@ const ChatMessages = ({ socket }) => {
     }
   }, []);
 
-  const handleTextChange = (event) => {
-    setText(event.target.value);
-  };
-
   // provides format  -> Sun Jul 03 2022;
   const getDateString = (dateObject) => {
     const date = new Date(JSON.parse(dateObject).date);
@@ -97,18 +88,20 @@ const ChatMessages = ({ socket }) => {
 
   // function to send text message to the server
   const msgObject = {
-    chatRoomId: generateChatRoomId(chatWithUserIndex, currentUserIndex),
+    chatRoomId: generateChatRoomId(chatMateUserIndex, currentUserIndex),
     senderId: currentUserId,
-    recipientId: chatWithUserId,
+    recipientId: chatMateUserId,
     date: JSON.stringify({ date: new Date(Date.now()) }),
-    message: text,
+    message: "",
   };
+
   const sendTextMessage = (event) => {
     event.preventDefault();
-    if (text === "") return;
+    if (!textRef.current.value) return;
+    msgObject.message = textRef.current.value;
     socket.emit("sendMessage", msgObject);
     setMessages((msgList) => [...msgList, msgObject]);
-    setText("");
+    textRef.current.value = "";
   };
 
   // Getting the text message from the server(backend)
@@ -136,12 +129,12 @@ const ChatMessages = ({ socket }) => {
         </Link>
         <section className={styles["chat__message__header"]}>
           <div className={styles["image___icon__container"]}>
-            {!useSelector((state) => state.users.chatWithUser.imageUrl) && (
+            {!useSelector((state) => state.chat.chatMate.imageUrl) && (
               <IconContext.Provider value={{ size: "2.5em" }}>
                 <CgProfile className={styles["image__icon"]} />
               </IconContext.Provider>
             )}
-            {useSelector((state) => state.users.chatWithUser.imageUrl) && (
+            {useSelector((state) => state.chat.chatMate.imageUrl) && (
               <div className={styles["user__image__container"]}>
                 <img
                   src={imageUrl}
@@ -152,7 +145,7 @@ const ChatMessages = ({ socket }) => {
             )}
           </div>
           <div className={styles["chat__with__user__name"]}>
-            <p>{useSelector((state) => state.users.chatWithUser.userName)}</p>
+            <p>{useSelector((state) => state.chat.chatMate.userName)}</p>
           </div>
           <div className={styles["chat__with__calls__container"]}>
             <div className={styles["video__call"]}>
@@ -196,9 +189,8 @@ const ChatMessages = ({ socket }) => {
         <form className={styles["form__input"]}>
           <input
             type="text"
-            value={text}
+            ref={textRef}
             className={styles["form__input__field"]}
-            onChange={(event) => handleTextChange(event)}
             onKeyPress={(event) => {
               if (event.key === "Enter") {
                 sendTextMessage();

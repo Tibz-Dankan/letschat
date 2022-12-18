@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { authenticate } from "./store/actions/auth";
 import { io } from "socket.io-client";
-import { authActions } from "./store/store";
 import { baseUrl } from "./store/store";
 import Home from "./pages/Home/Home";
 import Chat from "./pages/Chat/Chat";
@@ -21,22 +20,8 @@ function App() {
   const socket = io.connect(baseUrl);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
-  const userDataFromStorage = JSON.parse(localStorage.getItem("userData"));
-  const navigationTypeReload =
-    performance.getEntriesByType("navigation")[0].type === "reload";
-
-  // update the redux store on page reload
-  if (navigationTypeReload && userDataFromStorage) {
-    dispatch(
-      authActions.authenticate({
-        token: userDataFromStorage.token,
-        user: userDataFromStorage.user,
-      })
-    );
-  }
-
   useEffect(() => {
-    const tryLogin = () => {
+    const tryLogin = async () => {
       const userData = localStorage.getItem("userData");
       const parsedData = JSON.parse(userData);
       if (!userData) {
@@ -49,21 +34,9 @@ function App() {
         // console.log("token expired already");;
         return <Route path="/" element={<Navigate to="/login" replace />} />;
       }
-      dispatch(authenticate(user, token));
+      await dispatch(authenticate(user, token));
     };
     tryLogin();
-
-    // const updateChatMateData = () => {
-    //   const chatMateData = localStorage.getItem("chatMateData");
-    //   const pasedData = JSON.parse(chatMateData);
-    //   const path = "get dynamic chatroom path";
-    //   if (!chatMateData && path === "chat-room") {
-    //     console.log("no chat mate data data");
-    //     return navigate("/", { replace: true });
-    //   }
-    //   // dispatch action to update chat mate data
-    // };
-    // updateChatMateData();
   }, [dispatch]);
 
   return (

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FadeLoader } from "react-spinners";
@@ -26,7 +25,7 @@ const ChatMates = ({ socket }) => {
       }
     };
     getAllChatMates();
-  }, []);
+  }, [dispatch, token, userId]);
 
   return (
     <Fragment>

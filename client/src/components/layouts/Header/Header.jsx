@@ -23,41 +23,49 @@ const Header = ({ title }) => {
   const openSideBarHandler = async () => {
     await dispatch(openSideBar());
   };
-  // TODO: Dynamic data rendering basing on the title
-  // TODO: convert each title to lowercase using javascript
+
   if (title.toLowerCase() === "chatroom")
     return (
       <Fragment>
         <div className={styles["header"]}>
-          <nav className={styles["header__nav"]}>
-            <Link to="chat" className={styles["header__nav__link"]}>
-              <span className={styles["header__nav__link--icon"]}>
-                <IconContext.Provider
-                  value={{
-                    size: "2rem",
-                  }}
+          <div className={styles["header__chat-mate"]}>
+            <nav className={styles["header__chat-mate__nav"]}>
+              <Link
+                to="chat"
+                className={styles["header__chat-mate__nav__link"]}
+              >
+                <span className={styles["header__chat-mate__nav__link--icon"]}>
+                  <IconContext.Provider
+                    value={{
+                      size: "2rem",
+                    }}
+                  >
+                    <IoArrowBackOutline />
+                  </IconContext.Provider>
+                </span>
+              </Link>
+            </nav>
+            <div className={styles["header__chat-mate__data"]}>
+              {userImage && <img alt="myPic" />}
+              {!userImage && (
+                <span
+                  className={
+                    styles["header__chat-mate__data-image--placeholder"]
+                  }
                 >
-                  <IoArrowBackOutline />
-                </IconContext.Provider>
+                  <IconContext.Provider
+                    value={{
+                      size: "4rem",
+                    }}
+                  >
+                    <IoPersonCircleSharp />
+                  </IconContext.Provider>
+                </span>
+              )}
+              <span className={styles["header__chat-mate__data--name"]}>
+                {chatMateName}
               </span>
-            </Link>
-          </nav>
-          <div className={styles["header__user"]}>
-            {userImage && <img alt="my pic here" />}
-            {!userImage && (
-              <span className={styles["header__user-image--placeholder"]}>
-                <IconContext.Provider
-                  value={{
-                    size: "4rem",
-                  }}
-                >
-                  <IoPersonCircleSharp />
-                </IconContext.Provider>
-              </span>
-            )}
-            <span className={styles["header__user--username"]}>
-              {chatMateName}
-            </span>
+            </div>
           </div>
           <div className={styles["header__sidebar-actions"]}>
             {!isOpenSideBar && (

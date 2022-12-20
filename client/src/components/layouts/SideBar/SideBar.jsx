@@ -2,13 +2,16 @@ import React, { Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logOut } from "../../../store/actions/auth";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { IconContext } from "react-icons";
 import { FaWindowClose } from "react-icons/fa";
 import { IoPersonCircleSharp } from "react-icons/io5";
 import { GoPerson } from "react-icons/go";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { MdSettings } from "react-icons/md";
+import { BsFillChatTextFill } from "react-icons/bs";
+import { MdExplore, MdOutlineExplore } from "react-icons/md";
+// import {}
 import { closeSideBar } from "../../../store/actions/sideBar";
 import styles from "./SideBar.module.scss";
 
@@ -25,6 +28,7 @@ const SideBar = () => {
   const sideBarSectionStyles = {
     height: "100vh",
     width: "0",
+    boxShadow: "0rem 0rem 0.2rem 0.2rem hsla(0, 0%, 0%, 0.15)",
     position: "fixed",
     zIndex: "1000",
     top: "0",
@@ -67,7 +71,45 @@ const SideBar = () => {
           </div>
           <nav className={styles["sidebar__nav"]}>
             <li className={styles["sidebar__nav__list"]}>
-              <Link to="profile" className={styles["sidebar__nav__list__link"]}>
+              <NavLink
+                to="explore"
+                className={styles["sidebar__nav__list__link"]}
+              >
+                <span className={styles["sidebar__nav__list__link--icon"]}>
+                  <IconContext.Provider
+                    value={{
+                      size: "2rem",
+                    }}
+                  >
+                    <MdExplore />
+                  </IconContext.Provider>
+                </span>
+                <span className={styles["sidebar__nav__list__link--text"]}>
+                  Explore
+                </span>
+              </NavLink>
+            </li>
+            <li className={styles["sidebar__nav__list"]}>
+              <NavLink to="chat" className={styles["sidebar__nav__list__link"]}>
+                <span className={styles["sidebar__nav__list__link--icon"]}>
+                  <IconContext.Provider
+                    value={{
+                      size: "1.8rem",
+                    }}
+                  >
+                    <BsFillChatTextFill />
+                  </IconContext.Provider>
+                </span>
+                <span className={styles["sidebar__nav__list__link--text"]}>
+                  Chat
+                </span>
+              </NavLink>
+            </li>
+            <li className={styles["sidebar__nav__list"]}>
+              <NavLink
+                to="profile"
+                className={styles["sidebar__nav__list__link"]}
+              >
                 <span className={styles["sidebar__nav__list__link--icon"]}>
                   <IconContext.Provider
                     value={{
@@ -80,10 +122,10 @@ const SideBar = () => {
                 <span className={styles["sidebar__nav__list__link--text"]}>
                   Profile
                 </span>
-              </Link>
+              </NavLink>
             </li>
             <li className={styles["sidebar__nav__list"]}>
-              <Link
+              <NavLink
                 to="settings"
                 className={styles["sidebar__nav__list__link"]}
               >
@@ -99,7 +141,7 @@ const SideBar = () => {
                 <span className={styles["sidebar__nav__list__link--text"]}>
                   Settings
                 </span>
-              </Link>
+              </NavLink>
             </li>
           </nav>
           <div className={styles["sidebar__logout"]}>

@@ -1,3 +1,47 @@
 .header {
-  color: green;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  background-color: var(--color-grey-dark-3);
+  color: var(--color-grey-light-1);
+  padding: 1.2rem 4.8rem;
+  position: relative;
+  @media screen and (min-width: 1050px) {
+    padding: 1.2rem 6.4rem;
+  }
+  @media screen and (max-width: 600px) {
+    padding: 1.2rem 3.2rem;
+  }
+  &__logo {
+    font-weight: bold;
+    position: absolute;
+    left: 4.8rem;
+    margin-top: -0.8rem;
+    @media screen and (min-width: 1050px) {
+      left: 6.4rem;
+    }
+    @media screen and (max-width: 600px) {
+      left: 3.2rem;
+    }
+  }
+  &__user {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    margin-right: 3.2rem;
+    @media screen and (max-width: 600px) {
+      margin-right: 1.6rem;
+    }
+    // &--placeholder {
+    // }
+    &--username {
+      margin-left: 0.8rem;
+      margin-top: -0.8rem;
+      @media screen and (max-width: 400px) {
+        margin-left: 0.4rem;
+        display: none;
+      }
+    }
+  }
 }

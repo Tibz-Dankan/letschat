@@ -5,7 +5,10 @@ import { log } from "../../utils/consoleLog";
 
 export const logOut = () => {
   localStorage.clear();
-  return authActions.logout();
+  // return authActions.logout();
+  return async (dispatch) => {
+    await dispatch(authActions.logout());
+  };
 };
 
 const saveDataToStorage = (user, token) => {

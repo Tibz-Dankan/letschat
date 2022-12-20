@@ -13,7 +13,9 @@ import LogIn from "./pages/LogIn/LogIn";
 import Header from "./components/layouts/Header/Header";
 import SideBar from "./components/layouts/SideBar/SideBar";
 import ChatRoom from "./pages/ChatRoom/ChatRoom";
-import styles from "./App.module.scss";
+import Profile from "./pages/Profile/Profile";
+import Settings from "./pages/Settings/Settings";
+import "./App.scss";
 
 function App() {
   const dispatch = useDispatch();
@@ -40,7 +42,7 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className={styles["App"]}>
+    <div className="app">
       <BrowserRouter>
         {!isLoggedIn && (
           <Routes>
@@ -107,6 +109,24 @@ function App() {
                     <div className="pages__component">
                       <Header title={"ChatRoom"} />
                       <ChatRoom socket={socket} />
+                    </div>
+                  }
+                />
+                <Route
+                  path="profile"
+                  element={
+                    <div className="pages__component">
+                      <Header title={"Profile"} />
+                      <Profile />
+                    </div>
+                  }
+                />
+                <Route
+                  path="settings"
+                  element={
+                    <div className="pages__component">
+                      <Header title={"Settings"} />
+                      <Settings />
                     </div>
                   }
                 />

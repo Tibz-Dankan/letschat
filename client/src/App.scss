@@ -1,0 +1,74 @@
+// Colors used where from open color(https://yeun.github.io/open-color) and converted into hsl from https://convertacolor.com
+
+/*
+  FONT SIZE SYSTEM(px)
+  10 /  12 / 14 / 16 / 18 / 20 / 24 / 24 / 36 / 44 / 52 / 62 / 74 / 86 / 98 
+
+  SPACING SYSTEM(px)
+  2 / 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 80 / 96 / 128 
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+:root {
+  --color-primary: hsl(187.4, 80.2%, 41.6%);
+  --color-primary-light: hsl(186.9, 73.9%, 65.5%);
+  --color-primary-dark: hsl(189.3, 84.7%, 28.2%);
+  --color-secondary: hsl(207.9, 79.7%, 51.8%);
+  --color-secondary-light: hsl(206.5, 95.8%, 72.2%);
+
+  --color-grey-light-1: hsl(210, 16.7%, 97.6%);
+  --color-grey-light-2: hsl(210, 16.7%, 95.3%);
+  --color-grey-light-3: hsl(210, 13.8%, 88.6%);
+  --color-grey-light-4: hsl(210, 14%, 83.1%);
+
+  --color-grey-dark-1: hsl(210, 10.8%, 71%);
+  --color-grey-dark-2: hsl(210, 7.1%, 55.7%);
+  --color-grey-dark-3: hsl(210, 10.3%, 22.7%);
+  --color-grey-dark-4: hsl(210, 10.8%, 14.5%);
+
+  --shadow-dark: 1px 1px 6px 2px hsla(0, 0%, 0%, 0.3);
+  --shadow-light: 2px 4px 6px 2px hsla(0, 0%, 0%, 0.08);
+}
+
+body {
+  font-weight: 400;
+  line-height: 1.6;
+  font-family: "Inter", sans-serif;
+  font-size: 62.5%;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+}
+
+.pages {
+  position: relative;
+  // box-shadow: var(--shadow-dark);
+  // min-height: 100vh;
+  // display: flex;
+  // overflow: hidden;
+  // flex: 1;
+  // @media (max-width: 800px) {
+  //   flex-direction: column;
+  // }
+  // &__component {
+  //   display: flex;
+  //   flex: 1;
+  //   flex-direction: column;
+  //   background-color: var(--color-grey-light-2);
+  //   position: relative;
+  // }
+}

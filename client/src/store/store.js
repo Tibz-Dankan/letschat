@@ -3,6 +3,7 @@ import authSlice from "./reducers/auth";
 import usersSlice from "./reducers/users";
 import chatSlice from "./reducers/chat";
 import notificationSlice from "./reducers/notification";
+import sideBarSlice from "./reducers/sideBar";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     users: usersSlice.reducer,
     chat: chatSlice.reducer,
     notification: notificationSlice.reducer,
+    sidebar: sideBarSlice.reducer,
   },
 });
 
@@ -26,3 +28,4 @@ export const authActions = authSlice.actions;
 export const usersActions = usersSlice.actions;
 export const chatActions = chatSlice.actions;
 export const notificationActions = notificationSlice.actions;
+export const sideBarActions = sideBarSlice.actions;

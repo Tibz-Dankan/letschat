@@ -2,8 +2,7 @@ import React, { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./ChatList.module.scss";
 import { IconContext } from "react-icons";
-import { CgProfile } from "react-icons/cg";
-import { SiGooglemessages } from "react-icons/si";
+import { IoPersonCircleSharp } from "react-icons/io5";
 import { useSelector, useDispatch } from "react-redux";
 import { updateChatMateData } from "../../../store/actions/chat";
 import { generateChatRoomId } from "../../../utils/generateChatRoomId";
@@ -24,34 +23,59 @@ const ChatList = ({ socket }) => {
 
   return (
     <Fragment>
-      <div className={styles["chat__list__wrapper"]}>
+      <div className={styles["chat__list"]}>
+        <div className={styles["chat__list__heading"]}>
+          <h4>CHATS</h4>
+          <h4>EXPLORE</h4>
+        </div>
         {chatMates.map((chatMate) => {
           return (
-            <div key={chatMate.userId} className={styles["chat__list"]}>
+            <div
+              key={chatMate.userId}
+              className={styles["chat__list__chat-mate"]}
+            >
               {!chatMate.imageUrl && (
-                <IconContext.Provider value={{ size: "2.5em" }}>
-                  <div className={styles["image__icon__container"]}>
-                    <CgProfile className={styles["image__icon"]} />
-                  </div>
-                </IconContext.Provider>
+                <span
+                  className={styles["chat__list__chat-mate--image-placeholder"]}
+                >
+                  <IconContext.Provider value={{ size: "4rem" }}>
+                    <IoPersonCircleSharp />
+                  </IconContext.Provider>
+                </span>
               )}
               {chatMate.imageUrl && (
-                <div className={styles["user__image"]}>
+                <div className={styles["chat__list__chat-mate--image"]}>
                   <img src={chatMate.imageUrl} alt="Profile pic" />
                 </div>
               )}
-              <div className={styles["user__name"]}>{chatMate.userName}</div>
               <div
                 onClick={() => joinRoom(chatMate)}
-                className={styles["message__icon"]}
+                className={styles["chat__list__chat-mate__data"]}
               >
-                <IconContext.Provider value={{ size: "1.5em" }}>
-                  <SiGooglemessages />
-                </IconContext.Provider>
+                <span className={styles["chat__list__chat-mate__data--name"]}>
+                  {chatMate.userName}
+                </span>
+                <span
+                  className={
+                    styles["chat__list__chat-mate__data--last-message"]
+                  }
+                >
+                  last message text
+                </span>
+                <span
+                  className={
+                    styles["chat__list__chat-mate__data--message-date"]
+                  }
+                >
+                  Date Or Time
+                </span>
               </div>
             </div>
           );
         })}
+        <footer className={styles["chat__list__footer"]}>
+          <span>LetsChat &copy; {new Date().getFullYear()}</span>
+        </footer>
       </div>
     </Fragment>
   );

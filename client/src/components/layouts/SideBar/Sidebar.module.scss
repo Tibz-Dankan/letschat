@@ -7,6 +7,7 @@
   position: relative;
   font-size: 1.4rem;
   &--close {
+    color: var(--color-grey-dark-1);
     z-index: 10000;
     position: absolute;
     top: 0.4rem;
@@ -14,7 +15,7 @@
   }
   &__user {
     background-color: var(--color-grey-dark-3);
-    color: var(--color-grey-light-1);
+    color: var(--color-grey-dark-1);
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -24,7 +25,6 @@
     left: 0rem;
     right: 0rem;
     border-left: 0.4rem solid var(--color-primary);
-    // box-shadow: var(--shadow-light);
     &--image {
       margin-right: 1rem;
     }

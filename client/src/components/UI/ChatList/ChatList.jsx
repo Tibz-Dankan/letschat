@@ -25,8 +25,8 @@ const ChatList = ({ socket }) => {
     <Fragment>
       <div className={styles["chat__list"]}>
         <div className={styles["chat__list__heading"]}>
-          <h4>CHATS</h4>
-          <h4>EXPLORE</h4>
+          <h5>CHATS</h5>
+          <h5>EXPLORE</h5>
         </div>
         {chatMates.map((chatMate) => {
           return (

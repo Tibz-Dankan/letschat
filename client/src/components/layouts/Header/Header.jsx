@@ -13,7 +13,7 @@ const Header = ({ title }) => {
   const dispatch = useDispatch();
   const isOpenSideBar = useSelector((state) => state.sidebar.isOpenSideBar);
   const userImage = useSelector((state) => state.auth.user.userImageUrl);
-  const userName = useSelector((state) => state.auth.user.userName);
+  // const userName = useSelector((state) => state.auth.user.userName);
   const chatMateName = useSelector((state) => state.chat.chatMate.userName);
 
   const closeSideBarHandler = async () => {
@@ -106,21 +106,6 @@ const Header = ({ title }) => {
       <div className={styles["header"]}>
         <div className={styles["header__logo"]}>
           <span className={styles["header__logo--text"]}>LetsChat</span>
-        </div>
-        <div className={styles["header__user"]}>
-          {userImage && <img alt="my pic here" />}
-          {!userImage && (
-            <span className={styles["header__user-image--placeholder"]}>
-              <IconContext.Provider
-                value={{
-                  size: "4rem",
-                }}
-              >
-                <IoPersonCircleSharp />
-              </IconContext.Provider>
-            </span>
-          )}
-          <span className={styles["header__user--username"]}>{userName}</span>
         </div>
         <div className={styles["header__sidebar-actions"]}>
           {!isOpenSideBar && (

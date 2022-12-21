@@ -23,6 +23,8 @@
     top: 0rem;
     left: 0rem;
     right: 0rem;
+    border-left: 0.4rem solid var(--color-primary);
+    // box-shadow: var(--shadow-light);
     &--image {
       margin-right: 1rem;
     }
@@ -45,7 +47,13 @@
         &--text {
           margin-left: 0.8rem;
           margin-top: -0.4rem;
+          text-transform: uppercase;
         }
+      }
+      &__link:hover,
+      &__link:focus {
+        color: var(--color-primary);
+        transition: 0.3s;
       }
     }
   }

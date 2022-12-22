@@ -7,6 +7,7 @@ import { generateChatRoomId } from "../../../utils/generateChatRoomId";
 import { IoSendSharp } from "react-icons/io5";
 import { IconContext } from "react-icons";
 import ChatInBoxHeader from "../../layouts/ChatInBoxHeader/ChatInBoxHeader";
+// import Modernizr from "modernizr";
 import styles from "./ChatInBox.module.scss";
 
 const ChatInBox = ({ socket }) => {
@@ -21,6 +22,14 @@ const ChatInBox = ({ socket }) => {
   const currentUserId = useSelector((state) => state.auth.user.userId);
   const chatRoomId = generateChatRoomId(chatMateUserIndex, currentUserIndex);
   const navigate = useNavigate();
+  // const msgDivRef = useRef(null);
+
+  // if (Modernizr.ie) {
+  //   document.body.classList.add("ie");
+  // }
+  if (navigator.userAgent.indexOf("Trident/") > -1) {
+    document.body.classList.add("ie");
+  }
 
   useMemo(() => {
     const getChatMessages = async () => {
@@ -91,6 +100,10 @@ const ChatInBox = ({ socket }) => {
     navigateToChat();
   }, [chatRoomId, navigate]);
 
+  // useEffect(() => {
+  //   msgDivRef.current.scrollTop = msgDivRef.current.scrollHeight;
+  // }, []);
+
   // Getting the text message from the server(backend)
   useEffect(() => {
     socket.on("receiveMessage", (msg) => {
@@ -99,63 +112,88 @@ const ChatInBox = ({ socket }) => {
     });
   }, [socket]);
 
+  const chatMessages = messages.map((msgObject) => {
+    return (
+      <div
+        key={new Date(JSON.parse(msgObject.date).date)}
+        id={styles["single-message"]}
+        className={
+          currentUserId === msgObject.senderId
+            ? styles["chat-in-box__message--sender"]
+            : styles["chat-in-box__message--recipient"]
+        }
+      >
+        <span className={styles["chat-in-box__message--text"]}>
+          {msgObject.message}
+        </span>
+        <div className={styles["chat-in-box__message__date"]}>
+          <span className={styles["chat-in-box__message__date--date"]}>
+            {getDateString(msgObject.date)}
+          </span>
+          <span className={styles["chat-in-box__message__date--time"]}>
+            {getTime(msgObject.date)}
+          </span>
+        </div>
+      </div>
+    );
+  });
+
   return (
     <Fragment>
       <div className={styles["chat-in-box"]}>
         <div className={styles["chat-in-box__header"]}>
           <ChatInBoxHeader />
         </div>
-        <section className={styles["chat-in-box__data"]}>
-          {messages.map((msgObject) => {
+        <section className={styles["chat-in-box__message"]}>
+          {/* {messages.map((msgObject) => {
             return (
               <div
                 key={new Date(JSON.parse(msgObject.date).date)}
-                id={styles["chat-in-box__data__message"]}
+                id={styles["single-message"]}
                 className={
-                  currentUserIndex === msgObject.senderId
-                    ? styles["chat-in-box__data__message--sender"]
-                    : styles["chat-in-box__data__message--recipient"]
+                  currentUserId === msgObject.senderId
+                    ? styles["chat-in-box__message--sender"]
+                    : styles["chat-in-box__message--recipient"]
                 }
               >
-                <span className={styles["chat-in-box__data__message--text"]}>
+                <span className={styles["chat-in-box__message--text"]}>
                   {msgObject.message}
                 </span>
-                <div className={styles["chat-in-box__data__message__date"]}>
-                  <span
-                    className={styles["chat-in-box__data__message__date--date"]}
-                  >
+                <div className={styles["chat-in-box__message__date"]}>
+                  <span className={styles["chat-in-box__message__date--date"]}>
                     {getDateString(msgObject.date)}
                   </span>
-                  <span
-                    className={styles["chat-in-box__data__message__date--time"]}
-                  >
+                  <span className={styles["chat-in-box__message__date--time"]}>
                     {getTime(msgObject.date)}
                   </span>
                 </div>
               </div>
             );
-          })}
+          })} */}
+          {chatMessages}
         </section>
         <form className={styles["chat-in-box__form"]}>
-          <input
-            type="text"
-            ref={textRef}
-            className={styles["chat-in-box__form__input"]}
-            onKeyPress={(event) => {
-              if (event.key === "Enter") {
-                sendTextMessage(event);
-              }
-            }}
-            required
-          />
-          <span
-            onClick={(event) => sendTextMessage(event)}
-            className={styles["chat-in-box__form__submit"]}
-          >
-            <IconContext.Provider value={{ size: "1.5rem" }}>
-              <IoSendSharp />
-            </IconContext.Provider>
-          </span>
+          <div className={styles["chat-in-box__form__group"]}>
+            <input
+              type="text"
+              ref={textRef}
+              className={styles["chat-in-box__form__group__input"]}
+              onKeyPress={(event) => {
+                if (event.key === "Enter") {
+                  sendTextMessage(event);
+                }
+              }}
+              required
+            />
+            <span
+              onClick={(event) => sendTextMessage(event)}
+              className={styles["chat-in-box__form__group__submit"]}
+            >
+              <IconContext.Provider value={{ size: "1.5rem" }}>
+                <IoSendSharp />
+              </IconContext.Provider>
+            </span>
+          </div>
         </form>
       </div>
     </Fragment>

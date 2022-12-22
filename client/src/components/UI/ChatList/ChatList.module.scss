@@ -9,6 +9,7 @@
   overflow-y: auto;
   position: relative;
   margin-top: 7rem;
+  transition: 0.35s;
   @media screen and (max-width: 800px) {
     width: 35rem;
   }

@@ -1,0 +1,47 @@
+.header {
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--color-grey-dark-3);
+  color: var(--color-grey-dark-1);
+  padding: 1.2rem 1.8rem;
+  position: relative;
+
+  &__chat-mate {
+    display: flex;
+    align-items: center;
+    &__nav {
+      &__link {
+        text-decoration: none;
+        color: var(--color-grey-light-1);
+        &--icon {
+          margin-right: 0.8rem;
+          @media screen and (max-width: 300px) {
+            margin-right: 0.4rem;
+          }
+        }
+      }
+    }
+    &__data {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      &--name {
+        margin-left: 0.8rem;
+        margin-top: -0.8rem;
+        @media screen and (max-width: 400px) {
+          margin-left: 0.4rem;
+        }
+      }
+    }
+  }
+  &__sidebar-actions {
+    &--open,
+    &--close {
+      @media screen and (max-width: 300px) {
+        margin-left: 0.8rem;
+      }
+    }
+  }
+}

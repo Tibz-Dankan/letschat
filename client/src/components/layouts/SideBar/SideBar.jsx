@@ -30,7 +30,7 @@ const SideBar = () => {
     width: "0",
     boxShadow: "0rem 0rem 0.2rem 0.2rem hsla(0, 0%, 0%, 0.15)",
     position: "fixed",
-    zIndex: "1000",
+    zIndex: "1200",
     top: "0",
     left: "0",
     overflowX: "hidden",

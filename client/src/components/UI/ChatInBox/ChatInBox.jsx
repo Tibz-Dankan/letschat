@@ -1,23 +1,18 @@
 import React, { useState, useEffect, Fragment, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { log } from "../../../utils/consoleLog";
 import { baseUrl } from "../../../store/store";
 import { generateChatRoomId } from "../../../utils/generateChatRoomId";
-import { clearChatRoomAndLocalStorage } from "../../../store/actions/users";
-import { IoMdVideocam } from "react-icons/io";
-import { IoCallSharp } from "react-icons/io5";
-import { CgProfile } from "react-icons/cg";
-import { GiPlayButton } from "react-icons/gi";
+import { IoSendSharp } from "react-icons/io5";
 import { IconContext } from "react-icons";
+import ChatInBoxHeader from "../../layouts/ChatInBoxHeader/ChatInBoxHeader";
 import styles from "./ChatInBox.module.scss";
 
 const ChatInBox = ({ socket }) => {
   const textRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const token = useSelector((state) => state.auth.token);
-  const imageUrl = useSelector((state) => state.chat.chatMate.imageUrl);
   const chatMateUserIndex = useSelector(
     (state) => state.chat.chatMate.userIndex
   );
@@ -25,16 +20,7 @@ const ChatInBox = ({ socket }) => {
   const currentUserIndex = useSelector((state) => state.auth.user.userIndex);
   const currentUserId = useSelector((state) => state.auth.user.userId);
   const chatRoomId = generateChatRoomId(chatMateUserIndex, currentUserIndex);
-  log("chat room Id: " + chatRoomId); // to be removed
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const navigateToChat = () => {
-    if (!chatRoomId) {
-      return navigate("/chat", { replace: true });
-    }
-  };
-  navigateToChat();
 
   useMemo(() => {
     const getChatMessages = async () => {
@@ -96,6 +82,15 @@ const ChatInBox = ({ socket }) => {
     textRef.current.value = "";
   };
 
+  useEffect(() => {
+    const navigateToChat = () => {
+      if (!chatRoomId) {
+        return navigate("/chat", { replace: true });
+      }
+    };
+    navigateToChat();
+  }, [chatRoomId, navigate]);
+
   // Getting the text message from the server(backend)
   useEffect(() => {
     socket.on("receiveMessage", (msg) => {
@@ -106,66 +101,34 @@ const ChatInBox = ({ socket }) => {
 
   return (
     <Fragment>
-      <div className={styles["chat__Message__container"]}>
-        <Link
-          to="/chat"
-          onClick={() => dispatch(clearChatRoomAndLocalStorage())}
-          className={styles["chat__msg"]}
-        >
-          <h2>Back</h2>
-        </Link>
-        <section className={styles["chat__message__header"]}>
-          <div className={styles["image___icon__container"]}>
-            {!useSelector((state) => state.chat.chatMate.imageUrl) && (
-              <IconContext.Provider value={{ size: "2.5em" }}>
-                <CgProfile className={styles["image__icon"]} />
-              </IconContext.Provider>
-            )}
-            {useSelector((state) => state.chat.chatMate.imageUrl) && (
-              <div className={styles["user__image__container"]}>
-                <img
-                  src={imageUrl}
-                  alt="Profile pic"
-                  className={styles["user__image"]}
-                />
-              </div>
-            )}
-          </div>
-          <div className={styles["chat__with__user__name"]}>
-            <p>{useSelector((state) => state.chat.chatMate.userName)}</p>
-          </div>
-          <div className={styles["chat__with__calls__container"]}>
-            <div className={styles["video__call"]}>
-              <IconContext.Provider value={{ size: "1.3em" }}>
-                <IoMdVideocam />
-              </IconContext.Provider>
-            </div>
-            <div className={styles["audio__call"]}>
-              <IconContext.Provider value={{ size: "1.3em" }}>
-                <IoCallSharp />
-              </IconContext.Provider>
-            </div>
-          </div>
-        </section>
-        <section className={styles["message__container"]}>
-          <span>Messages Here</span>
+      <div className={styles["chat-in-box"]}>
+        <div className={styles["chat-in-box__header"]}>
+          <ChatInBoxHeader />
+        </div>
+        <section className={styles["chat-in-box__data"]}>
           {messages.map((msgObject) => {
             return (
               <div
                 key={new Date(JSON.parse(msgObject.date).date)}
-                id={styles["message"]}
+                id={styles["chat-in-box__data__message"]}
                 className={
                   currentUserIndex === msgObject.senderId
-                    ? styles["my__message"]
-                    : styles["other__message"]
+                    ? styles["chat-in-box__data__message--sender"]
+                    : styles["chat-in-box__data__message--recipient"]
                 }
               >
-                <span className={styles["msg"]}>{msgObject.message} </span>
-                <div className={styles["date__time__container"]}>
-                  <span className={styles["date"]}>
+                <span className={styles["chat-in-box__data__message--text"]}>
+                  {msgObject.message}
+                </span>
+                <div className={styles["chat-in-box__data__message__date"]}>
+                  <span
+                    className={styles["chat-in-box__data__message__date--date"]}
+                  >
                     {getDateString(msgObject.date)}
                   </span>
-                  <span className={styles["time"]}>
+                  <span
+                    className={styles["chat-in-box__data__message__date--time"]}
+                  >
                     {getTime(msgObject.date)}
                   </span>
                 </div>
@@ -173,26 +136,26 @@ const ChatInBox = ({ socket }) => {
             );
           })}
         </section>
-        <form className={styles["form__input"]}>
+        <form className={styles["chat-in-box__form"]}>
           <input
             type="text"
             ref={textRef}
-            className={styles["form__input__field"]}
+            className={styles["chat-in-box__form__input"]}
             onKeyPress={(event) => {
               if (event.key === "Enter") {
-                sendTextMessage();
+                sendTextMessage(event);
               }
             }}
             required
           />
-          <div
-            onClick={(e) => sendTextMessage(e)}
-            className={styles["button__icon__container"]}
+          <span
+            onClick={(event) => sendTextMessage(event)}
+            className={styles["chat-in-box__form__submit"]}
           >
-            <IconContext.Provider value={{ size: "3em" }}>
-              <GiPlayButton />
+            <IconContext.Provider value={{ size: "1.5rem" }}>
+              <IoSendSharp />
             </IconContext.Provider>
-          </div>
+          </span>
         </form>
       </div>
     </Fragment>

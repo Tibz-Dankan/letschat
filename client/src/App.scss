@@ -64,11 +64,12 @@ html {
   // @media (max-width: 800px) {
   //   flex-direction: column;
   // }
-  // &__component {
-  //   display: flex;
-  //   flex: 1;
-  //   flex-direction: column;
-  //   background-color: var(--color-grey-light-2);
-  //   position: relative;
-  // }
+  &__component {
+    position: inherit;
+    // display: flex;
+    // flex: 1;
+    // flex-direction: column;
+    // background-color: var(--color-grey-light-2);
+    // position: relative;
+  }
 }

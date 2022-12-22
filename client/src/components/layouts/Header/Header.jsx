@@ -27,45 +27,90 @@ const Header = ({ title }) => {
   if (title.toLowerCase() === "chatroom")
     return (
       <Fragment>
-        <div className={styles["header"]}>
-          <div className={styles["header__chat-mate"]}>
-            <nav className={styles["header__chat-mate__nav"]}>
-              <Link
-                to="chat"
-                className={styles["header__chat-mate__nav__link"]}
-              >
-                <span className={styles["header__chat-mate__nav__link--icon"]}>
+        <header className={styles["header-section"]}>
+          <div className={styles["header"]}>
+            <div className={styles["header__chat-mate"]}>
+              <nav className={styles["header__chat-mate__nav"]}>
+                <Link
+                  to="chat"
+                  className={styles["header__chat-mate__nav__link"]}
+                >
+                  <span
+                    className={styles["header__chat-mate__nav__link--icon"]}
+                  >
+                    <IconContext.Provider
+                      value={{
+                        size: "2rem",
+                      }}
+                    >
+                      <IoArrowBackOutline />
+                    </IconContext.Provider>
+                  </span>
+                </Link>
+              </nav>
+              <div className={styles["header__chat-mate__data"]}>
+                {userImage && <img alt="myPic" />}
+                {!userImage && (
+                  <span
+                    className={
+                      styles["header__chat-mate__data-image--placeholder"]
+                    }
+                  >
+                    <IconContext.Provider
+                      value={{
+                        size: "4rem",
+                      }}
+                    >
+                      <IoPersonCircleSharp />
+                    </IconContext.Provider>
+                  </span>
+                )}
+                <span className={styles["header__chat-mate__data--name"]}>
+                  {chatMateName}
+                </span>
+              </div>
+            </div>
+            <div className={styles["header__sidebar-actions"]}>
+              {!isOpenSideBar && (
+                <span
+                  className={styles["header__sidebar-actions--open"]}
+                  onClick={() => openSideBarHandler()}
+                >
                   <IconContext.Provider
                     value={{
                       size: "2rem",
                     }}
                   >
-                    <IoArrowBackOutline />
-                  </IconContext.Provider>
-                </span>
-              </Link>
-            </nav>
-            <div className={styles["header__chat-mate__data"]}>
-              {userImage && <img alt="myPic" />}
-              {!userImage && (
-                <span
-                  className={
-                    styles["header__chat-mate__data-image--placeholder"]
-                  }
-                >
-                  <IconContext.Provider
-                    value={{
-                      size: "4rem",
-                    }}
-                  >
-                    <IoPersonCircleSharp />
+                    <GiHamburgerMenu />
                   </IconContext.Provider>
                 </span>
               )}
-              <span className={styles["header__chat-mate__data--name"]}>
-                {chatMateName}
-              </span>
+              {isOpenSideBar && (
+                <span
+                  className={styles["header__sidebar-actions--close"]}
+                  onClick={() => closeSideBarHandler()}
+                >
+                  <IconContext.Provider
+                    value={{
+                      size: "2rem",
+                    }}
+                  >
+                    <FaWindowClose />
+                  </IconContext.Provider>
+                </span>
+              )}
             </div>
+          </div>
+        </header>
+      </Fragment>
+    );
+
+  return (
+    <Fragment>
+      <header className={styles["header-section"]}>
+        <div className={styles["header"]}>
+          <div className={styles["header__logo"]}>
+            <span className={styles["header__logo--text"]}>LetsChat</span>
           </div>
           <div className={styles["header__sidebar-actions"]}>
             {!isOpenSideBar && (
@@ -98,46 +143,7 @@ const Header = ({ title }) => {
             )}
           </div>
         </div>
-      </Fragment>
-    );
-
-  return (
-    <Fragment>
-      <div className={styles["header"]}>
-        <div className={styles["header__logo"]}>
-          <span className={styles["header__logo--text"]}>LetsChat</span>
-        </div>
-        <div className={styles["header__sidebar-actions"]}>
-          {!isOpenSideBar && (
-            <span
-              className={styles["header__sidebar-actions--open"]}
-              onClick={() => openSideBarHandler()}
-            >
-              <IconContext.Provider
-                value={{
-                  size: "2rem",
-                }}
-              >
-                <GiHamburgerMenu />
-              </IconContext.Provider>
-            </span>
-          )}
-          {isOpenSideBar && (
-            <span
-              className={styles["header__sidebar-actions--close"]}
-              onClick={() => closeSideBarHandler()}
-            >
-              <IconContext.Provider
-                value={{
-                  size: "2rem",
-                }}
-              >
-                <FaWindowClose />
-              </IconContext.Provider>
-            </span>
-          )}
-        </div>
-      </div>
+      </header>
     </Fragment>
   );
 };

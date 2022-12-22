@@ -107,7 +107,7 @@ function App() {
                   path="chat-room"
                   element={
                     <div className="pages__component">
-                      <Header title={"ChatRoom"} />
+                      {/* <Header title={"ChatRoom"} /> */}
                       <ChatRoom socket={socket} />
                     </div>
                   }

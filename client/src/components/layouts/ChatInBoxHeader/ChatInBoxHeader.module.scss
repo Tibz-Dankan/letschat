@@ -7,14 +7,19 @@
   color: var(--color-grey-dark-1);
   padding: 1.2rem 1.8rem;
   position: relative;
-
+  @media screen and (min-width: 800px) {
+    padding: 1.2rem 3.2rem;
+  }
   &__chat-mate {
     display: flex;
     align-items: center;
     &__nav {
+      @media screen and (min-width: 601px) {
+        display: none;
+      }
       &__link {
         text-decoration: none;
-        color: var(--color-grey-light-1);
+        color: var(--color-grey-dark-1);
         &--icon {
           margin-right: 0.8rem;
           @media screen and (max-width: 300px) {

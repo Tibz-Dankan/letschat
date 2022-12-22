@@ -1,14 +1,112 @@
 .chat-in-box {
-  background-color: green;
+  background-color: var(--color-grey-dark-2);
   font-size: 1.2rem;
-  // max-height: 100vh;
   width: 100%;
-  height: 100%;
-  // &__header {
-  //   display: inline-block;
-  //   // margin-top: -6rem;
-  //   // padding: 0.4rem;
-  //   background-color: green;
-  //   z-index: 1150;
-  // }
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  &__header {
+    position: absolute;
+    top: 0rem;
+    left: 0rem;
+    right: 0rem;
+  }
+
+  &__data {
+    background-color: var(--color-grey-dark-2);
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 3.2rem 1.2rem;
+    margin: 5.2rem 0rem;
+    height: 80vh;
+    // SCROLLBAR STYLES FOR WEBKIT BROWSERS
+    &::-webkit-scrollbar {
+      width: 0.8rem;
+      height: auto;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(
+        to bottom,
+        var(--color-grey-dark-3),
+        var(--color-primary-dark),
+        var(--color-grey-dark-3)
+      );
+      border-radius: 0.8rem;
+    }
+    &::-webkit-scrollbar-track {
+      background: var(--color-grey-dark-2);
+    }
+    // SCROLLBAR STYLES FOR FIREFOX
+    &::-moz-scrollbar {
+      width: 0.8rem;
+      height: auto;
+    }
+    &::-moz-scrollbar-thumb {
+      background: linear-gradient(
+        to bottom,
+        var(--color-grey-dark-3),
+        var(--color-primary-dark),
+        var(--color-grey-dark-3)
+      );
+      border-radius: 0.8rem;
+    }
+    &::-moz-scrollbar-track {
+      background: var(--color-grey-dark-2);
+    }
+    // SCROLLBAR STYLES FOR INTERNET EXPLORER
+    .ie ::-ms-thumb {
+      background: linear-gradient(
+        to bottom,
+        var(--color-grey-dark-3),
+        var(--color-primary-dark),
+        var(--color-grey-dark-3)
+      );
+      border-radius: 0.8rem;
+    }
+    .ie ::-ms-track {
+      background: var(--color-grey-dark-2);
+    }
+
+    &__message {
+      border: 0.4rem solid black;
+    }
+  }
+  &__form {
+    background-color: var(--color-grey-dark-3);
+    position: absolute;
+    left: 0rem;
+    right: 0rem;
+    bottom: 0rem;
+    padding: 1.2rem 1.2rem;
+    display: flex;
+    justify-content: center;
+    &__group {
+      display: inherit;
+      align-items: center;
+      width: 90%;
+      &__input {
+        flex: 1;
+        padding: 1.6rem 0.8rem;
+        background-color: var(--color-grey-dark-4);
+        color: var(--color-grey-light-1);
+        border: 0.2rem solid var(--color-grey-dark-4);
+        border-radius: 1.2rem;
+        &:focus {
+          outline: none;
+          border: 0.2rem solid var(--color-grey-dark-2);
+          transition: 0.35s;
+        }
+      }
+      &__submit {
+        color: var(--color-grey-light-1);
+        display: grid;
+        place-items: center;
+        background-color: var(--color-primary-dark);
+        width: 4.8rem;
+        height: 4.8rem;
+        border-radius: 50%;
+        margin-left: 0.8rem;
+      }
+    }
+  }
 }

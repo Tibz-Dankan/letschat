@@ -112,42 +112,65 @@ const ChatInBox = ({ socket }) => {
     });
   }, [socket]);
 
+  const chatMessages = messages.map((msgObject) => {
+    return (
+      <div
+        key={new Date(JSON.parse(msgObject.date).date)}
+        id={styles["single-message"]}
+        className={
+          currentUserId === msgObject.senderId
+            ? styles["chat-in-box__message--sender"]
+            : styles["chat-in-box__message--recipient"]
+        }
+      >
+        <span className={styles["chat-in-box__message--text"]}>
+          {msgObject.message}
+        </span>
+        <div className={styles["chat-in-box__message__date"]}>
+          <span className={styles["chat-in-box__message__date--date"]}>
+            {getDateString(msgObject.date)}
+          </span>
+          <span className={styles["chat-in-box__message__date--time"]}>
+            {getTime(msgObject.date)}
+          </span>
+        </div>
+      </div>
+    );
+  });
+
   return (
     <Fragment>
       <div className={styles["chat-in-box"]}>
         <div className={styles["chat-in-box__header"]}>
           <ChatInBoxHeader />
         </div>
-        <section className={styles["chat-in-box__data"]}>
-          {messages.map((msgObject) => {
+        <section className={styles["chat-in-box__message"]}>
+          {/* {messages.map((msgObject) => {
             return (
               <div
                 key={new Date(JSON.parse(msgObject.date).date)}
-                id={styles["chat-in-box__data__message"]}
+                id={styles["single-message"]}
                 className={
-                  currentUserIndex === msgObject.senderId
-                    ? styles["chat-in-box__data__message--sender"]
-                    : styles["chat-in-box__data__message--recipient"]
+                  currentUserId === msgObject.senderId
+                    ? styles["chat-in-box__message--sender"]
+                    : styles["chat-in-box__message--recipient"]
                 }
               >
-                <span className={styles["chat-in-box__data__message--text"]}>
+                <span className={styles["chat-in-box__message--text"]}>
                   {msgObject.message}
                 </span>
-                <div className={styles["chat-in-box__data__message__date"]}>
-                  <span
-                    className={styles["chat-in-box__data__message__date--date"]}
-                  >
+                <div className={styles["chat-in-box__message__date"]}>
+                  <span className={styles["chat-in-box__message__date--date"]}>
                     {getDateString(msgObject.date)}
                   </span>
-                  <span
-                    className={styles["chat-in-box__data__message__date--time"]}
-                  >
+                  <span className={styles["chat-in-box__message__date--time"]}>
                     {getTime(msgObject.date)}
                   </span>
                 </div>
               </div>
             );
-          })}
+          })} */}
+          {chatMessages}
         </section>
         <form className={styles["chat-in-box__form"]}>
           <div className={styles["chat-in-box__form__group"]}>

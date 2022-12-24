@@ -1,4 +1,6 @@
 import React, { useState, useEffect, Fragment, useRef, useMemo } from "react";
+import ScrollToBottom from "react-scroll-to-bottom";
+import { css } from "@emotion/css";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { log } from "../../../utils/consoleLog";
@@ -23,6 +25,7 @@ const ChatInBox = ({ socket }) => {
   const chatRoomId = generateChatRoomId(chatMateUserIndex, currentUserIndex);
   const navigate = useNavigate();
   // const msgDivRef = useRef(null);
+  const effectRan = useRef(false);
 
   // if (Modernizr.ie) {
   //   document.body.classList.add("ie");
@@ -100,42 +103,54 @@ const ChatInBox = ({ socket }) => {
     navigateToChat();
   }, [chatRoomId, navigate]);
 
-  // useEffect(() => {
-  //   msgDivRef.current.scrollTop = msgDivRef.current.scrollHeight;
-  // }, []);
-
   // Getting the text message from the server(backend)
   useEffect(() => {
-    socket.on("receiveMessage", (msg) => {
-      log("chat messages: " + msg);
-      setMessages((msgList) => [...msgList, msg]);
-    });
+    if (effectRan.current === false) {
+      socket.on("receiveMessage", (msg) => {
+        // log("chat messages: " + msg);
+        console.log("message received");
+        console.log(msg);
+        setMessages((msgList) => [...msgList, msg]);
+      });
+      return () => {
+        effectRan.current = true;
+      };
+    }
   }, [socket]);
 
-  const chatMessages = messages.map((msgObject) => {
-    return (
-      <div
-        key={new Date(JSON.parse(msgObject.date).date)}
-        id={styles["single-message"]}
-        className={
-          currentUserId === msgObject.senderId
-            ? styles["chat-in-box__message--sender"]
-            : styles["chat-in-box__message--recipient"]
-        }
-      >
-        <span className={styles["chat-in-box__message--text"]}>
-          {msgObject.message}
-        </span>
-        <div className={styles["chat-in-box__message__date"]}>
-          <span className={styles["chat-in-box__message__date--date"]}>
-            {getDateString(msgObject.date)}
-          </span>
-          <span className={styles["chat-in-box__message__date--time"]}>
-            {getTime(msgObject.date)}
-          </span>
-        </div>
-      </div>
-    );
+  const color = "white";
+
+  // const className={css`
+  //   padding: 32px;
+  //   background-color: hotpink;
+  //   font-size: 24px;
+  //   border-radius: 4px;
+  //   &:hover {
+  //     color: ${color};
+  //   }
+  // `}
+
+  //   css`
+  // &::scrollbar {
+  //   width: 0.8rem;
+  //   height: auto;
+  // }
+  // &::scrollbar-thumb {
+  //   background: linear-gradient(
+  //     to bottom,
+  //     var(--color-grey-dark-3),
+  //     var(--color-primary-dark),
+  //     var(--color-grey-dark-3)
+  //   );
+  //   border-radius: 0.8rem;
+  // }
+  // &::scrollbar-track {
+  //   background: var(--color-grey-dark-2);
+  // }
+  // `
+  const ROOT_CSS = css({
+    height: 600,
+    width: 400,
   });
 
   return (
@@ -144,11 +159,11 @@ const ChatInBox = ({ socket }) => {
         <div className={styles["chat-in-box__header"]}>
           <ChatInBoxHeader />
         </div>
-        <section className={styles["chat-in-box__message"]}>
-          {/* {messages.map((msgObject) => {
+        <ScrollToBottom className={styles["chat-in-box__message"]}>
+          {messages.map((msgObject, index) => {
             return (
               <div
-                key={new Date(JSON.parse(msgObject.date).date)}
+                key={index}
                 id={styles["single-message"]}
                 className={
                   currentUserId === msgObject.senderId
@@ -156,22 +171,23 @@ const ChatInBox = ({ socket }) => {
                     : styles["chat-in-box__message--recipient"]
                 }
               >
-                <span className={styles["chat-in-box__message--text"]}>
-                  {msgObject.message}
-                </span>
-                <div className={styles["chat-in-box__message__date"]}>
-                  <span className={styles["chat-in-box__message__date--date"]}>
-                    {getDateString(msgObject.date)}
+                <div className={styles["content"]}>
+                  <span className={styles["content--text"]}>
+                    {msgObject.message}
                   </span>
-                  <span className={styles["chat-in-box__message__date--time"]}>
-                    {getTime(msgObject.date)}
-                  </span>
+                  <div className={styles["content__date"]}>
+                    {/* <span className={styles["content__date--date"]}>
+                      {getDateString(msgObject.date)}
+                    </span> */}
+                    <span className={styles["content__date--time"]}>
+                      {getTime(msgObject.date)}
+                    </span>
+                  </div>
                 </div>
               </div>
             );
-          })} */}
-          {chatMessages}
-        </section>
+          })}
+        </ScrollToBottom>
         <form className={styles["chat-in-box__form"]}>
           <div className={styles["chat-in-box__form__group"]}>
             <input

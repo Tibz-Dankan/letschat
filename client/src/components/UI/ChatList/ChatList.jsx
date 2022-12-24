@@ -11,7 +11,7 @@ const ChatList = ({ socket }) => {
   const chatMates = useSelector((state) => state.chat.allChatMates);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const currentUserIndex = useSelector((state) => state.auth.user.userId);
+  const currentUserIndex = useSelector((state) => state.auth.user.userIndex);
 
   // Join chat room
   const joinRoom = async (chatMate) => {

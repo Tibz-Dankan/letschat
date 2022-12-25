@@ -1,18 +1,18 @@
 import React, { Fragment } from "react";
 import styles from "./Modal.module.scss";
-import { RiCloseLine } from "react-icons/ri";
-import { useDispatch, useSelector } from "react-redux";
-import { hideNotificationModal } from "../../../store/actions/notification";
+// import { RiCloseLine } from "react-icons/ri";
+// import { useDispatch, useSelector } from "react-redux";
+// import { hideNotificationModal } from "../../../store/actions/notification";
 
 const Modal = ({ isErrorMessage }) => {
-  const notificationMessage = useSelector(
-    (state) => state.notification.notificationMsg
-  );
-  const dispatch = useDispatch();
+  // const notificationMessage = useSelector(
+  //   (state) => state.notification.notificationMsg
+  // );
+  // const dispatch = useDispatch();
 
   return (
     <Fragment>
-      <div
+      {/* <div
         className={styles["modal__container"]}
         onClick={() => dispatch(hideNotificationModal())}
       />
@@ -37,7 +37,7 @@ const Modal = ({ isErrorMessage }) => {
             {notificationMessage}
           </span>
         </p>
-      </div>
+      </div> */}
     </Fragment>
   );
 };

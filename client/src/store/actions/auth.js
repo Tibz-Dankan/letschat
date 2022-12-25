@@ -5,7 +5,6 @@ import { log } from "../../utils/consoleLog";
 
 export const logOut = () => {
   localStorage.clear();
-  // return authActions.logout();
   return async (dispatch) => {
     await dispatch(authActions.logout());
   };
@@ -41,18 +40,21 @@ export const login = (email, password) => {
       },
     });
 
-    console.log(response);
-
     if (!response.ok) {
       const error = await response.json();
-      console.log("error ");
-      console.log(error);
-      // dispatch message here
+      dispatch(
+        notificationActions.showCardNotification({
+          type: "error",
+          message: error.message,
+        })
+      );
+      setTimeout(() => {
+        dispatch(notificationActions.hideCardNotification());
+      }, [5000]);
+      throw new Error(error.message);
     }
 
     const data = await response.json();
-    console.log("response data");
-    console.log(data);
 
     // get the expiry time  // to be done later
     await dispatch(

@@ -7,7 +7,7 @@ import { FadeLoader } from "react-spinners";
 import { login } from "../../store/actions/auth";
 import { disableEnableButton } from "../../utils/disableEnableButton";
 import { log } from "../../utils/consoleLog";
-import Modal from "../../components/ui/Modal/Modal";
+// import Modal from "../../components/ui/Modal/Modal";
 import styles from "./LogIn.module.scss";
 
 const LogIn = () => {
@@ -63,7 +63,7 @@ const LogIn = () => {
   return (
     <Fragment>
       <div className={styles["login__container"]}>
-        {showNotificationModal && <Modal isErrorMessage={isError} />}
+        {/* {showNotificationModal && <Modal isErrorMessage={isError} />} */}
         <div className={styles["fade__loader__container"]}>
           {isLoading && <FadeLoader />}
         </div>

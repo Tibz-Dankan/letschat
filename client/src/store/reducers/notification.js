@@ -1,20 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// const theInitialState = {
+//   value: false,
+//   notificationMsg: "",
+// };
+
 const theInitialState = {
-  value: false,
-  notificationMsg: "",
+  showCardNotification: false,
+  cardNotificationType: null,
+  cardMessage: null,
 };
 export const notificationSlice = createSlice({
   name: "notification",
   initialState: theInitialState,
   reducers: {
-    showNotification(state, action) {
-      state.value = !state.value;
-      state.notificationMsg = action.payload.notificationMsg;
+    showCardNotification(state, action) {
+      state.showCardNotification = true;
+      state.cardNotificationType = action.payload.type;
+      state.cardMessage = action.payload.message;
     },
-    hideNotification(state) {
-      state.value = !state.value;
-      state.notificationMsg = "";
+    hideCardNotification(state, _) {
+      state.showCardNotification = false;
+      state.cardNotificationType = null;
+      state.cardMessage = null;
     },
   },
 });

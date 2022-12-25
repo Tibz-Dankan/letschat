@@ -15,12 +15,19 @@ import SideBar from "./components/layouts/SideBar/SideBar";
 import ChatRoom from "./pages/ChatRoom/ChatRoom";
 import Profile from "./pages/Profile/Profile";
 import Settings from "./pages/Settings/Settings";
+import Notification from "./components/UI/Notification/Notification";
+import { hideCardNotification } from "./store/actions/notification";
 import "./App.scss";
 
 function App() {
   const dispatch = useDispatch();
   const socket = io.connect(baseUrl);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const notification = useSelector((state) => state.notification);
+
+  const closeCardHandler = () => {
+    dispatch(hideCardNotification());
+  };
 
   useEffect(() => {
     const tryLogin = async () => {
@@ -59,6 +66,13 @@ function App() {
                 path="signup"
                 element={
                   <div>
+                    {notification.showCardNotification && (
+                      <Notification
+                        type={notification.cardNotificationType}
+                        message={notification.cardMessage}
+                        onClose={closeCardHandler}
+                      />
+                    )}
                     <SignUp />
                   </div>
                 }
@@ -67,6 +81,13 @@ function App() {
                 path="login"
                 element={
                   <div>
+                    {notification.showCardNotification && (
+                      <Notification
+                        type={notification.cardNotificationType}
+                        message={notification.cardMessage}
+                        onClose={closeCardHandler}
+                      />
+                    )}
                     <LogIn />
                   </div>
                 }
@@ -92,6 +113,13 @@ function App() {
         {isLoggedIn && (
           <Fragment>
             <div className="pages">
+              {notification.showCardNotification && (
+                <Notification
+                  type={notification.cardNotificationType}
+                  message={notification.cardMessage}
+                  onClose={closeCardHandler}
+                />
+              )}
               <SideBar />
               <Routes>
                 <Route

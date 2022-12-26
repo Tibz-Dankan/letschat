@@ -1,5 +1,12 @@
 {
   "[prisma]": { "editor.defaultFormatter": "Prisma.prisma" },
   "editor.formatOnSave": true,
-  "cSpell.words": ["Googlemessages", "reduxjs", "signin", "signup", "Videocam"]
+  "cSpell.words": [
+    "Googlemessages",
+    "Modernizr",
+    "reduxjs",
+    "signin",
+    "signup",
+    "Videocam"
+  ]
 }

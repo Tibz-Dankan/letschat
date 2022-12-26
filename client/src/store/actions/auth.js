@@ -81,19 +81,28 @@ export const signup = (userName, email, password) => {
       },
     });
 
-    log(response);
-
     if (!response.ok) {
       const error = await response.json();
-      console.log("error message");
-      console.log(error);
+      await dispatch(
+        notificationActions.showCardNotification({
+          type: "error",
+          message: error.message,
+        })
+      );
+      setTimeout(() => {
+        dispatch(notificationActions.hideCardNotification());
+      }, [5000]);
       throw new Error(error.message);
     }
 
     await dispatch(
-      notificationActions.showNotification({
-        notificationMsg: "Sign up successful, please login",
+      notificationActions.showCardNotification({
+        type: "success",
+        message: "Sign up successful, please login",
       })
     );
+    setTimeout(() => {
+      dispatch(notificationActions.hideCardNotification());
+    }, [5000]);
   };
 };

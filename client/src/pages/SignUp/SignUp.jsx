@@ -1,43 +1,40 @@
-import React, { useState, Fragment } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, Fragment, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { IconContext } from "react-icons";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { FadeLoader } from "react-spinners";
+import { AiOutlineCheck } from "react-icons/ai";
 import { signup } from "../../store/actions/auth";
-import { disableEnableButton } from "../../utils/disableEnableButton";
-import { log } from "../../utils/consoleLog";
-import Modal from "../../components/UI/Modal/Modal";
+import Loading from "../../components/UI/Loading/Loading";
 import styles from "./SignUp.module.scss";
 
 const SignUp = () => {
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
+  const userNameRef = useRef("");
+  const emailRef = useRef("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordLength, setPasswordLength] = useState(0);
+  const [confirmPasswordLength, setConfirmPasswordLength] = useState(0);
   let navigate = useNavigate();
   const dispatch = useDispatch();
-  const showNotificationModal = useSelector(
-    (state) => state.notification.value
-  );
-  const [isError, setIsError] = useState(false);
-
-  const handleUserNameChange = (event) => {
-    setUserName(event.target.value);
-  };
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
+    setPasswordLength(event.target.value.length);
   };
+
+  const correctPassWordLength = passwordLength != 0 && passwordLength >= 6;
+  const wrongPassWordLength = passwordLength != 0 && passwordLength < 6;
+  const correctPassWordMatch =
+    confirmPasswordLength != 0 && password === confirmPassword;
+  const wrongPassWordMatch =
+    confirmPasswordLength != 0 && password !== confirmPassword;
 
   const handleConfirmPasswordChange = (event) => {
     setConfirmPassword(event.target.value);
+    setConfirmPasswordLength(event.target.value.length);
   };
 
   const showHidePassword = () => {
@@ -52,132 +49,171 @@ const SignUp = () => {
     }
   };
 
-  const navigateToHomePage = () => {
+  const navigateToLogin = () => {
     setTimeout(() => {
-      navigate("/", { replace: true });
-    }, 2000);
+      navigate("/login", { replace: true });
+    }, 5000);
   };
 
-  const handleSignUpSubmit = async (event) => {
+  const signUpSubmitHandler = async (event) => {
     event.preventDefault();
-    if (!userName || !email || !password) return;
+    const userName = userNameRef.current.value;
+    const email = emailRef.current.value;
+    if (
+      !userName ||
+      !email ||
+      !password ||
+      password < 6 ||
+      password !== confirmPassword
+    ) {
+      return;
+    }
     try {
       setIsLoading(true);
-      disableEnableButton("button", true);
       await dispatch(signup(userName, email, password));
       setIsLoading(false);
-      disableEnableButton("button", false);
-      navigateToHomePage();
+      navigateToLogin();
     } catch (error) {
       setIsLoading(false);
-      disableEnableButton("button", false);
-      setIsError(true);
-      // log("error msg: " + error.message);
     }
   };
 
   return (
     <Fragment>
-      <div className={styles["signup__container"]}>
-        {showNotificationModal && <Modal isErrorMessage={isError} />}
-        <div className={styles["fade__loader__container"]}>
-          {isLoading && <FadeLoader size={5} />}
+      <div className={styles["signup"]}>
+        <div className={styles["signup__logo"]}>
+          <span className={styles["signup__logo--text"]}>LetsChat</span>
         </div>
         <form
           className={styles["signup__form"]}
-          onSubmit={(event) => handleSignUpSubmit(event)}
+          onSubmit={(event) => signUpSubmitHandler(event)}
         >
-          <p className={styles["signup__form__heading"]}>Sign Up</p>
-          <div className={styles["signup__form__input__container"]}>
+          <h4 className={styles["signup__form__heading"]}>
+            Sign Up for an account
+          </h4>
+          <div className={styles["signup__form__input"]}>
             <input
               type="text"
-              placeholder="UserName"
-              className={styles["signup__form__input"]}
-              value={userName}
-              onChange={(event) => handleUserNameChange(event)}
+              ref={userNameRef}
+              placeholder="User name"
+              className={styles["signup__form__input--field"]}
               required
             />
           </div>
-          <div className={styles["signup__form__input__container"]}>
+          <div className={styles["signup__form__input"]}>
             <input
               type="email"
+              ref={emailRef}
               placeholder="Email"
-              className={styles["signup__form__input"]}
-              value={email}
-              onChange={(event) => handleEmailChange(event)}
+              className={styles["signup__form__input--field"]}
               required
             />
           </div>
-          <div className={styles["signup__form__input__container"]}>
+          <div className={styles["signup__form__input"]}>
+            {correctPassWordLength && (
+              <span className={styles["signup__form__input--length-ok"]}>
+                <IconContext.Provider value={{ size: "1.5rem" }}>
+                  <AiOutlineCheck />
+                </IconContext.Provider>
+              </span>
+            )}
+            {wrongPassWordLength && (
+              <span className={styles["signup__form__input--length-error"]}>
+                Password must be at least 6 characters
+              </span>
+            )}
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className={styles["signup__form__input"]}
+              className={styles["signup__form__input--field"]}
               value={password}
               onChange={(event) => handlePasswordChange(event)}
               required
             />
             {showPassword && (
-              <IconContext.Provider
-                value={{ color: "black", className: "global-class-name" }}
+              <span
+                onClick={() => showHidePassword()}
+                className={styles["eye-icon"]}
               >
-                <div onClick={() => showHidePassword()}>
+                <IconContext.Provider value={{ size: "2rem" }}>
                   <AiOutlineEyeInvisible />
-                </div>
-              </IconContext.Provider>
+                </IconContext.Provider>
+              </span>
             )}
             {!showPassword && (
-              <IconContext.Provider
-                value={{ color: "black", className: "global-class-name" }}
+              <span
+                onClick={() => showHidePassword()}
+                className={styles["eye-icon"]}
               >
-                <div onClick={() => showHidePassword()}>
+                <IconContext.Provider value={{ size: "2rem" }}>
                   <AiOutlineEye />
-                </div>
-              </IconContext.Provider>
+                </IconContext.Provider>
+              </span>
             )}
           </div>
-          <div className={styles["signup__form__input__container"]}>
+          <div className={styles["signup__form__input"]}>
+            {correctPassWordMatch && (
+              <span className={styles["signup__form__input--match-ok"]}>
+                <IconContext.Provider value={{ size: "1.5rem" }}>
+                  <AiOutlineCheck />
+                </IconContext.Provider>
+              </span>
+            )}
+            {wrongPassWordMatch && (
+              <span className={styles["signup__form__input--match-error"]}>
+                Passwords don't match
+              </span>
+            )}
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              className={styles["signup__form__input"]}
+              placeholder="Confirm password"
+              className={styles["signup__form__input--field"]}
               value={confirmPassword}
               onChange={(event) => handleConfirmPasswordChange(event)}
               required
             />
             {showPassword && (
-              <IconContext.Provider
-                value={{ color: "black", className: "global-class-name" }}
+              <span
+                onClick={() => showHidePassword()}
+                className={styles["eye-icon"]}
               >
-                <div onClick={() => showHidePassword()}>
+                <IconContext.Provider value={{ size: "2rem" }}>
                   <AiOutlineEyeInvisible />
-                </div>
-              </IconContext.Provider>
+                </IconContext.Provider>
+              </span>
             )}
             {!showPassword && (
-              <IconContext.Provider
-                value={{ color: "black", className: "global-class-name" }}
+              <span
+                onClick={() => showHidePassword()}
+                className={styles["eye-icon"]}
               >
-                <div onClick={() => showHidePassword()}>
+                <IconContext.Provider value={{ size: "2rem" }}>
                   <AiOutlineEye />
-                </div>
-              </IconContext.Provider>
+                </IconContext.Provider>
+              </span>
             )}
           </div>
-          <button
-            type="submit"
-            id="button"
-            className={styles["signup__form__btn"]}
-            // disabled="disabled" //some testing here
-          >
-            Sign Up
-          </button>
+          <div className={styles["button__container"]}>
+            {!isLoading && (
+              <button type="submit" id="button" className={styles["form-btn"]}>
+                Sign Up
+              </button>
+            )}
+            {isLoading && <Loading event={"on-form-submit"} />}
+          </div>
+          <div className={styles["have__account__container"]}>
+            <span className={styles["have__account"]}>
+              <Link to="/login" className={styles["link"]}>
+                Already have an account?
+              </Link>
+            </span>
+          </div>
         </form>
-        <div className={styles["have___account__container"]}>
-          <p className={styles["have__account"]}>
-            Already have account <Link to="/">Login</Link>
-          </p>
-        </div>
+        <footer className={styles["signup__footer"]}>
+          <span>
+            LetsChat &copy; {new Date().getFullYear()}. All rights reserved
+          </span>
+        </footer>
       </div>
     </Fragment>
   );

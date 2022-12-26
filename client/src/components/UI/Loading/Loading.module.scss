@@ -1,0 +1,29 @@
+.loading-spinner {
+  height: 3.8rem;
+  border-radius: 0.4rem;
+  margin-bottom: 2.4rem;
+  background-color: var(--color-primary-dark);
+  color: var(--color-grey-light-2);
+  position: relative;
+  &::after {
+    content: "";
+    height: 2.4rem;
+    width: 2.4rem;
+    background-color: var(--color-primary-dark);
+    border: 0.4rem solid var(--color-grey-light-2);
+    border-bottom: 0.4rem solid var(--color-primary-dark);
+    border-radius: 50%;
+    position: absolute;
+    top: 0.7rem;
+    left: 45%;
+    animation: spinner 0.8s linear infinite;
+    @keyframes spinner {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  }
+}

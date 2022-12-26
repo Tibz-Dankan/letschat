@@ -1,34 +1,19 @@
-import React, { Fragment, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { Fragment, useState, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { IconContext } from "react-icons";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { FadeLoader } from "react-spinners";
 import { login } from "../../store/actions/auth";
-import { disableEnableButton } from "../../utils/disableEnableButton";
-import { log } from "../../utils/consoleLog";
-// import Modal from "../../components/ui/Modal/Modal";
+import Loading from "../../components/UI/Loading/Loading";
 import styles from "./LogIn.module.scss";
 
 const LogIn = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const emailRef = useRef("");
+  const passwordRef = useRef("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   let navigate = useNavigate();
   const dispatch = useDispatch();
-  const showNotificationModal = useSelector(
-    (state) => state.notification.value
-  );
-  const [isError, setIsError] = useState(false);
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
 
   const showHidePassword = () => {
     switch (showPassword) {
@@ -44,88 +29,94 @@ const LogIn = () => {
 
   const handleLogInSubmit = async (event) => {
     event.preventDefault();
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
     if (!email || !password) return;
     try {
       setIsLoading(true);
-      disableEnableButton("button", true);
       await dispatch(login(email, password));
       setIsLoading(false);
-      disableEnableButton("button", false); //TODO: to be modified
       navigate("/", { replace: true });
     } catch (error) {
       setIsLoading(false);
-      disableEnableButton("button", false);
-      setIsError(true);
-      // log("error msg: " + error.message);
     }
   };
 
   return (
     <Fragment>
-      <div className={styles["login__container"]}>
-        {/* {showNotificationModal && <Modal isErrorMessage={isError} />} */}
-        <div className={styles["fade__loader__container"]}>
-          {isLoading && <FadeLoader />}
+      <div className={styles["login"]}>
+        <div className={styles["login__logo"]}>
+          <span className={styles["login__logo--text"]}>LetsChat</span>
         </div>
         <form
           className={styles["login__form"]}
           onSubmit={(event) => handleLogInSubmit(event)}
         >
-          <p className={styles["login__form__heading"]}>Log In</p>
-          <div className={styles["login__form__input__container"]}>
+          <h4 className={styles["login__form__heading"]}>
+            Log into your account
+          </h4>
+          <div className={styles["login__form__input"]}>
             <input
               type="email"
+              ref={emailRef}
               placeholder="Email"
-              className={styles["login__form__input"]}
-              value={email}
-              onChange={(event) => handleEmailChange(event)}
+              className={styles["login__form__input--field"]}
               required
             />
           </div>
-          <div className={styles["login__form__input__container"]}>
+          <div className={styles["login__form__input"]}>
             <input
               type={showPassword ? "text" : "password"}
+              ref={passwordRef}
               placeholder="Password"
-              className={styles["login__form__input"]}
-              value={password}
-              onChange={(event) => handlePasswordChange(event)}
+              className={styles["login__form__input--field"]}
               required
             />
             {showPassword && (
-              <IconContext.Provider
-                value={{ color: "black", className: "global-class-name" }}
+              <span
+                onClick={() => showHidePassword()}
+                className={styles["eye-icon"]}
               >
-                <div onClick={() => showHidePassword()}>
+                <IconContext.Provider value={{ size: "2rem" }}>
                   <AiOutlineEyeInvisible />
-                </div>
-              </IconContext.Provider>
+                </IconContext.Provider>
+              </span>
             )}
             {!showPassword && (
-              <IconContext.Provider
-                value={{ color: "black", className: "global-class-name" }}
+              <span
+                onClick={() => showHidePassword()}
+                className={styles["eye-icon"]}
               >
-                <div onClick={() => showHidePassword()}>
+                <IconContext.Provider value={{ size: "2rem" }}>
                   <AiOutlineEye />
-                </div>
-              </IconContext.Provider>
+                </IconContext.Provider>
+              </span>
             )}
           </div>
-          <button
-            id="button"
-            type="submit"
-            className={styles["login__form__btn"]}
-          >
-            Log In
-          </button>
+          <div className={styles["button__container"]}>
+            {!isLoading && (
+              <button type="submit" className={styles["form-btn"]}>
+                Log In
+              </button>
+            )}
+            {isLoading && <Loading event={"on-form-loading"} />}
+          </div>
+          {/* <div className={styles["forgot__password__container"]}>
+            <p>Forgot Password?</p>
+          </div> */}
+          <div className={styles["dont__have___account__container"]}>
+            <span className={styles["dont__have__account"]}>
+              <Link to="/signup" className={styles["link"]}>
+                Don't have an account
+              </Link>
+            </span>
+          </div>
         </form>
-        <div className={styles["forgot__password__container"]}>
-          <p>Forgot Password?</p>
-        </div>
-        <div className={styles["dont__have___account__container"]}>
-          <p className={styles["dont__have__account"]}>
-            Don't have account <Link to="/signup">SignUp</Link>
-          </p>
-        </div>
+        <footer className={styles["login__footer"]}>
+          <span>
+            LetsChat &copy; {new Date().getFullYear()}. All rights reserved
+          </span>
+        </footer>
       </div>
     </Fragment>
   );

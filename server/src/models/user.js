@@ -25,7 +25,7 @@ User.comparePasswords = async (password, dbPassword) => {
 User.findUserById = async (userId) => {
   return await prisma.user.findFirst({
     where: {
-      userId: { equals: userId.toString() },
+      userId: { equals: userId },
     },
   });
 };
@@ -45,17 +45,21 @@ User.findUsers = async () => {
 User.findUsersExceptMe = async (userId) => {
   return await prisma.user.findMany({
     where: {
-      userId: { not: userId.toString() },
+      userId: { not: userId },
     },
   });
 };
 
-// // update password
-// User.updatePassword = (newHashedPassword, userId, userEmail) => {
-//   return db.query(
-//     "UPDATE users SET password = $1 WHERE user_id = $2 AND email =$3 RETURNING *",
-//     [newHashedPassword, userId, userEmail]
-//   );
-// };
+User.updatePassword = async (userId, newPassword) => {
+  const newHashedPassword = await bcrypt.hash(newPassword, 10);
+  return await prisma.user.update({
+    where: {
+      userId: userId,
+    },
+    data: {
+      password: newHashedPassword,
+    },
+  });
+};
 
 module.exports = User;

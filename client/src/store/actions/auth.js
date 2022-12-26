@@ -1,7 +1,7 @@
 import { baseUrl } from "../store";
 import { authActions } from "../store";
 import { notificationActions } from "../store";
-import { log } from "../../utils/consoleLog";
+// import { log } from "../../utils/consoleLog";
 
 export const logOut = () => {
   localStorage.clear();
@@ -99,6 +99,43 @@ export const signup = (userName, email, password) => {
       notificationActions.showCardNotification({
         type: "success",
         message: "Sign up successful, please login",
+      })
+    );
+    setTimeout(() => {
+      dispatch(notificationActions.hideCardNotification());
+    }, [5000]);
+  };
+};
+
+export const updatePassword = (userId, currentPassword, newPassword, token) => {
+  return async (dispatch) => {
+    const response = await fetch(`${baseUrl}/api/users/update-password`, {
+      method: "POST",
+      body: JSON.stringify({ userId, currentPassword, newPassword }),
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      await dispatch(
+        notificationActions.showCardNotification({
+          type: "error",
+          message: error.message,
+        })
+      );
+      setTimeout(() => {
+        dispatch(notificationActions.hideCardNotification());
+      }, [5000]);
+      throw new Error(error.message);
+    }
+
+    await dispatch(
+      notificationActions.showCardNotification({
+        type: "success",
+        message: "password update successful",
       })
     );
     setTimeout(() => {

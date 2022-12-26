@@ -48,10 +48,29 @@ const login = asyncHandler(async (req, res, next) => {
 });
 
 // TODO: forgot password, update password
+const updatePassword = asyncHandler(async (req, res, next) => {
+  const userId = req.body.userId;
+  console.log("userId");
+  console.log(userId);
+  const currentPassword = req.body.currentPassword;
+  const newPassword = req.body.newPassword;
+  const user = await User.findUserById(userId);
+  console.log("user");
+  console.log(user);
+  if (!(await User.comparePasswords(currentPassword, user.password))) {
+    return next(new AppError("Incorrect current password", 403));
+  }
+  if (await User.comparePasswords(newPassword, user.password)) {
+    return next(new AppError("New password same as current password", 403));
+  }
+  await User.updatePassword(userId, newPassword);
+  res.status(200).json({ status: "success" });
+});
 
 // TODO: explore users (users you haven't chatted with)
 
 module.exports = {
   signup,
   login,
+  updatePassword,
 };

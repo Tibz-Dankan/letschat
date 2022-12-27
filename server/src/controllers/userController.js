@@ -67,10 +67,27 @@ const updatePassword = asyncHandler(async (req, res, next) => {
   res.status(200).json({ status: "success" });
 });
 
+const updateProfile = asyncHandler(async (req, res, next) => {
+  const userId = req.body.userId;
+  const userName = req.body.userName;
+  const email = req.body.email;
+  console.log(req.body);
+  if (!userId || !userName || !email) {
+    return next(new AppError("Please fill out all fields", 400));
+  }
+  const user = await User.updateProfile(userId, userName, email);
+
+  res.status(200).json({
+    status: "success",
+    user,
+  });
+});
+
 // TODO: explore users (users you haven't chatted with)
 
 module.exports = {
   signup,
   login,
   updatePassword,
+  updateProfile,
 };

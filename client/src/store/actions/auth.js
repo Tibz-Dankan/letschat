@@ -143,3 +143,49 @@ export const updatePassword = (userId, currentPassword, newPassword, token) => {
     }, [5000]);
   };
 };
+
+export const updateProfile = (userId, userName, email, token) => {
+  return async (dispatch) => {
+    const response = await fetch(`${baseUrl}/api/users/update-profile`, {
+      method: "POST",
+      body: JSON.stringify({ userId, userName, email }),
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      await dispatch(
+        notificationActions.showCardNotification({
+          type: "error",
+          message: error.message,
+        })
+      );
+      setTimeout(() => {
+        dispatch(notificationActions.hideCardNotification());
+      }, [5000]);
+      throw new Error(error.message);
+    }
+    await dispatch(
+      notificationActions.showCardNotification({
+        type: "success",
+        message: "Profile update successful",
+      })
+    );
+    setTimeout(() => {
+      dispatch(notificationActions.hideCardNotification());
+    }, [5000]);
+    const data = await response.json();
+    localStorage.removeItem("userData");
+    // update user data in the store
+    await dispatch(
+      authActions.authenticate({
+        token: token,
+        user: data.user,
+      })
+    );
+    saveDataToStorage(data.user, data.token);
+  };
+};

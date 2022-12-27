@@ -62,4 +62,23 @@ User.updatePassword = async (userId, newPassword) => {
   });
 };
 
+User.updateProfile = async (userId, userName, email) => {
+  return await prisma.user.update({
+    where: {
+      userId: userId,
+    },
+    data: {
+      userName: userName,
+      email: email,
+    },
+    select: {
+      userIndex: true,
+      userId: true,
+      userName: true,
+      email: true,
+      imageUrl: true,
+    },
+  });
+};
+
 module.exports = User;

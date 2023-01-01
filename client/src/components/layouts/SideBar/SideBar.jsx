@@ -74,6 +74,7 @@ const SideBar = () => {
               <NavLink
                 to="explore"
                 className={styles["sidebar__nav__list__link"]}
+                onClick={() => closeSideBarHandler()}
               >
                 <span className={styles["sidebar__nav__list__link--icon"]}>
                   <IconContext.Provider
@@ -90,7 +91,11 @@ const SideBar = () => {
               </NavLink>
             </li>
             <li className={styles["sidebar__nav__list"]}>
-              <NavLink to="chat" className={styles["sidebar__nav__list__link"]}>
+              <NavLink
+                to="chat"
+                className={styles["sidebar__nav__list__link"]}
+                onClick={() => closeSideBarHandler()}
+              >
                 <span className={styles["sidebar__nav__list__link--icon"]}>
                   <IconContext.Provider
                     value={{
@@ -109,6 +114,7 @@ const SideBar = () => {
               <NavLink
                 to="profile"
                 className={styles["sidebar__nav__list__link"]}
+                onClick={() => closeSideBarHandler()}
               >
                 <span className={styles["sidebar__nav__list__link--icon"]}>
                   <IconContext.Provider
@@ -128,6 +134,7 @@ const SideBar = () => {
               <NavLink
                 to="settings"
                 className={styles["sidebar__nav__list__link"]}
+                onClick={() => closeSideBarHandler()}
               >
                 <span className={styles["sidebar__nav__list__link--icon"]}>
                   <IconContext.Provider

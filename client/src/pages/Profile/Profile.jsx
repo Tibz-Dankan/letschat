@@ -6,6 +6,8 @@ import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../../store/actions/auth";
 // import { authenticate } from "../../store/actions/auth";
+import Image from "../../components/UI/Image/Image";
+import myImage from "../../assets/dankan.jpeg";
 import styles from "./Profile.module.scss";
 
 const Profile = () => {
@@ -70,7 +72,11 @@ const Profile = () => {
             <div className={styles["profile__user-data__image"]}>
               {user.imageUrl && (
                 <div className={styles["profile__user-data__image--image"]}>
-                  {/* Actual user image */}
+                  <Image
+                    src={myImage}
+                    alt={userName}
+                    class={styles["my-image"]}
+                  />
                 </div>
               )}
               {!user.imageUrl && (

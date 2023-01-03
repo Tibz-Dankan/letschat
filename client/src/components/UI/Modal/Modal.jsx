@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import ReactModal from "react-modal";
-import { IoMdClose } from "react-icons/io";
+import { FaWindowClose } from "react-icons/fa";
 import { IconContext } from "react-icons";
 import styles from "./Modal.module.scss";
 
@@ -12,10 +12,16 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
+    width: "60%",
+    minHeight: "60vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    border: " 0.1rem solid hsl(210, 10.8%, 14.5%)",
+    backgroundColor: "hsl(210, 10.8%, 14.5%)",
+    boxShadow: "0rem 0rem 0.2rem 0.2rem hsla(0, 0%, 0%, 0.15)",
   },
 };
-
-ReactModal.setAppElement("#yourAppElement");
 
 const Modal = (props) => {
   const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -39,18 +45,14 @@ const Modal = (props) => {
           onRequestClose={closeModal}
           style={customStyles}
           contentLabel="Example Modal"
+          ariaHideApp={false}
         >
-          <div className={styles["modal__content"]}>
-            <span
-              onClick={closeModal}
-              className={styles["modal__content__close"]}
-            >
-              <IconContext.Provider value={{ size: "2rem" }}>
-                <IoMdClose />
-              </IconContext.Provider>
-            </span>
-            {props.children}
-          </div>
+          <span onClick={closeModal} className={styles["modal__close"]}>
+            <IconContext.Provider value={{ size: "2rem" }}>
+              <FaWindowClose />
+            </IconContext.Provider>
+          </span>
+          <div className={styles["modal__content"]}>{props.children}</div>
         </ReactModal>
       </div>
     </Fragment>

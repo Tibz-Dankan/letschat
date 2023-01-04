@@ -189,3 +189,51 @@ export const updateProfile = (userId, userName, email, token) => {
     saveDataToStorage(data.user, data.token);
   };
 };
+
+export const uploadPhoto = (userId, photo, token) => {
+  return async (dispatch) => {
+    const response = await fetch(
+      `${baseUrl}/api/users/upload-photo/${userId}`,
+      {
+        method: "POST",
+        body: JSON.stringify({ photo }),
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      await dispatch(
+        notificationActions.showCardNotification({
+          type: "error",
+          message: error.message,
+        })
+      );
+      setTimeout(() => {
+        dispatch(notificationActions.hideCardNotification());
+      }, [5000]);
+      throw new Error(error.message);
+    }
+    await dispatch(
+      notificationActions.showCardNotification({
+        type: "success",
+        message: "Image upload successful",
+      })
+    );
+    setTimeout(() => {
+      dispatch(notificationActions.hideCardNotification());
+    }, [5000]);
+    const data = await response.json();
+
+    await dispatch(
+      authActions.authenticate({
+        token: token,
+        user: data.user,
+      })
+    );
+    saveDataToStorage(data.user, data.token);
+  };
+};

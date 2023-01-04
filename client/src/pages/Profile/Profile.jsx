@@ -8,6 +8,7 @@ import { updateProfile } from "../../store/actions/auth";
 // import { authenticate } from "../../store/actions/auth";
 import Image from "../../components/UI/Image/Image";
 import myImage from "../../assets/dankan.jpeg";
+import ImageUploader from "../../components/UI/ImageUploader/ImageUploader";
 import styles from "./Profile.module.scss";
 
 const Profile = () => {
@@ -94,22 +95,24 @@ const Profile = () => {
               )}
               <div className={styles["profile__user-data__image--actions"]}>
                 {user.imageUrl && (
-                  <button
-                    className={
-                      styles["profile__user-data__image--actions--upload-btn"]
-                    }
-                  >
-                    Update Image
-                  </button>
+                  // <button
+                  //   className={
+                  //     styles["profile__user-data__image--actions--upload-btn"]
+                  //   }
+                  // >
+                  //   Update Image
+                  // </button>
+                  <ImageUploader open={"Update Image"} />
                 )}
                 {!user.imageUrl && (
-                  <button
-                    className={
-                      styles["profile__user-data__image--actions--upload-btn"]
-                    }
-                  >
-                    Add Image
-                  </button>
+                  // <button
+                  //   className={
+                  //     styles["profile__user-data__image--actions--upload-btn"]
+                  //   }
+                  // >
+                  //   Add Image
+                  // </button>
+                  <ImageUploader open={"Add Image"} />
                 )}
               </div>
             </div>

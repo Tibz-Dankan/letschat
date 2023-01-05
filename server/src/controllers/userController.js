@@ -1,5 +1,10 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const { firebaseApp } = require("../config/firebaseConfig");
+const { getStorage, deleteObject } = require("firebase/storage");
+const { ref, uploadString, getDownloadURL } = require("firebase/storage");
+const path = require("path");
 const AppError = require("../utils/error");
 const { asyncHandler } = require("../utils/asyncHandler");
 require("dotenv").config();
@@ -91,6 +96,47 @@ const updateProfile = asyncHandler(async (req, res, next) => {
   });
 });
 
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage: storage,
+  limits: { fieldSize: 20 * 1024 * 1024 },
+});
+
+const randomNumber = () => {
+  return Math.floor(Math.random() * 100000000);
+};
+
+const uploadPhoto = asyncHandler(async (req, res, next) => {
+  const userId = req.params.userId;
+  const imageDataUrl = req.body.photo;
+  if (!imageDataUrl) return next(new AppError("Please provide a photo", 400));
+
+  const extension = path.extname("image.jpeg");
+  const imageName = `letschat-${randomNumber()}-${userId}${extension}`;
+
+  let user = await User.findUserById(userId);
+
+  const firebaseStorage = getStorage(firebaseApp);
+  let usersImageRef, delImageRef;
+
+  if (process.env.NODE_ENV === "production") {
+    usersImageRef = ref(firebaseStorage, `prod/images/users/${imageName}`);
+    delImageRef = ref(firebaseStorage, `prod/images/users/${user.imageName}`);
+  } else {
+    usersImageRef = ref(firebaseStorage, `dev/images/users/${imageName}`);
+    delImageRef = ref(firebaseStorage, `dev/images/users/${user.imageName}`);
+  }
+
+  await uploadString(usersImageRef, imageDataUrl, "data_url");
+  const downloadURL = await getDownloadURL(usersImageRef);
+
+  if (user.imageUrl) {
+    await deleteObject(delImageRef);
+  }
+  user = await User.updatePhoto(userId, imageName, downloadURL);
+  res.status(200).json({ status: "success", user: user });
+});
+
 // TODO: explore users (users you haven't chatted with)
 
 module.exports = {
@@ -98,4 +144,6 @@ module.exports = {
   login,
   updatePassword,
   updateProfile,
+  uploadPhoto,
+  upload,
 };

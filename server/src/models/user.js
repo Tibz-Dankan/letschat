@@ -81,4 +81,23 @@ User.updateProfile = async (userId, userName, email) => {
   });
 };
 
+User.updatePhoto = async (userId, imageName, imageUrl) => {
+  return await prisma.user.update({
+    where: {
+      userId: userId,
+    },
+    data: {
+      imageName: imageName,
+      imageUrl: imageUrl,
+    },
+    select: {
+      userIndex: true,
+      userId: true,
+      userName: true,
+      email: true,
+      imageUrl: true,
+    },
+  });
+};
+
 module.exports = User;

@@ -24,8 +24,6 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 const signup = asyncHandler(async (req, res, next) => {
-  console.log("request body");
-  console.log(req.body);
   const email = req.body.email;
   const user = await User.findUserByEmail(email);
 
@@ -48,6 +46,7 @@ const login = asyncHandler(async (req, res, next) => {
     userId: user.userId,
     userName: user.userName,
     email: user.email,
+    imageUrl: user.imageUrl,
   };
   createSendToken(userObj, 200, res);
 });
@@ -55,8 +54,6 @@ const login = asyncHandler(async (req, res, next) => {
 // TODO: forgot password, update password
 const updatePassword = asyncHandler(async (req, res, next) => {
   const userId = req.body.userId;
-  console.log("userId");
-  console.log(userId);
   const currentPassword = req.body.currentPassword;
   const newPassword = req.body.newPassword;
   const user = await User.findUserById(userId);

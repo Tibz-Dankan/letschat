@@ -192,13 +192,15 @@ export const updateProfile = (userId, userName, email, token) => {
 
 export const uploadPhoto = (userId, photo, token) => {
   return async (dispatch) => {
+    let formData = new FormData();
+    formData.append("photo", photo);
+
     const response = await fetch(
       `${baseUrl}/api/users/upload-photo/${userId}`,
       {
         method: "POST",
-        body: JSON.stringify({ photo }),
+        body: formData,
         headers: {
-          "Content-type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       }

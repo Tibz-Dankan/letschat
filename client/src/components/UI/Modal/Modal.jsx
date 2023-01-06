@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import ReactModal from "react-modal";
 import { FaWindowClose } from "react-icons/fa";
 import { IconContext } from "react-icons";
@@ -33,6 +33,10 @@ const Modal = (props) => {
   const closeModal = () => {
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    closeModal();
+  }, [props.onClose]);
 
   return (
     <Fragment>

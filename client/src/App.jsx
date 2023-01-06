@@ -123,7 +123,7 @@ function App() {
               <SideBar />
               <Routes>
                 <Route
-                  path="/Chat"
+                  path="chat"
                   element={
                     <div className="pages__component">
                       <Header title={"Chat"} />
@@ -159,7 +159,7 @@ function App() {
                   }
                 />
                 <Route path="/" element={<Navigate to="/chat" replace />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
+                <Route path="*" element={<Navigate to="/chat" replace />} />
               </Routes>
             </div>
           </Fragment>

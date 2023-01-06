@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../../store/actions/auth";
 // import { authenticate } from "../../store/actions/auth";
 import Image from "../../components/UI/Image/Image";
-import myImage from "../../assets/dankan.jpeg";
 import ImageUploader from "../../components/UI/ImageUploader/ImageUploader";
 import styles from "./Profile.module.scss";
 
@@ -74,9 +73,10 @@ const Profile = () => {
               {user.imageUrl && (
                 <div className={styles["profile__user-data__image--image"]}>
                   <Image
-                    src={myImage}
+                    src={user.imageUrl}
                     alt={userName}
                     class={styles["my-image"]}
+                    height={200}
                   />
                 </div>
               )}
@@ -94,26 +94,8 @@ const Profile = () => {
                 </span>
               )}
               <div className={styles["profile__user-data__image--actions"]}>
-                {user.imageUrl && (
-                  // <button
-                  //   className={
-                  //     styles["profile__user-data__image--actions--upload-btn"]
-                  //   }
-                  // >
-                  //   Update Image
-                  // </button>
-                  <ImageUploader open={"Update Image"} />
-                )}
-                {!user.imageUrl && (
-                  // <button
-                  //   className={
-                  //     styles["profile__user-data__image--actions--upload-btn"]
-                  //   }
-                  // >
-                  //   Add Image
-                  // </button>
-                  <ImageUploader open={"Add Image"} />
-                )}
+                {user.imageUrl && <ImageUploader open={"Update Image"} />}
+                {!user.imageUrl && <ImageUploader open={"Add Image"} />}
               </div>
             </div>
             <div className={styles["profile__user-data__details"]}>

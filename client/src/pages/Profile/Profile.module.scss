@@ -34,15 +34,19 @@
       display: grid;
       place-items: center;
       border-radius: 0.4rem;
-      padding: 0rem 0rem 2.4rem 0rem;
       background-color: var(--color-grey-dark-3);
       box-shadow: var(--shadow-dark);
+      padding: 2.4rem;
       &--image {
-        background-color: green;
+        display: grid;
+        place-items: center;
+        // background-color: green;
+        width: 100%;
         .my-image {
-          border: 1rem solid black;
+          width: 100%;
+          border: 0.8rem solid var(--color-grey-dark-2);
+          // object-fit: cover;
           border-radius: 50%;
-          z-index: 10;
         }
       }
       &--placeholder {
@@ -55,8 +59,9 @@
         }
       }
       &--actions {
-        padding: 0rem 2.4rem;
+        // padding: 0rem 2.4rem;
         width: 100%;
+        margin-top: 2.4rem;
         &--upload-btn {
           font-size: 1.6rem;
           font-weight: bold;

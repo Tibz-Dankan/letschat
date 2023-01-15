@@ -10,15 +10,14 @@ import { GoPerson } from "react-icons/go";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { MdSettings } from "react-icons/md";
 import { BsFillChatTextFill } from "react-icons/bs";
-import { MdExplore, MdOutlineExplore } from "react-icons/md";
-// import {}
+import { MdExplore } from "react-icons/md";
 import { closeSideBar } from "../../../store/actions/sideBar";
 import styles from "./SideBar.module.scss";
 
 const SideBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userName = useSelector((state) => state.auth.user.userName);
+  const user = useSelector((state) => state.auth.user);
 
   const logOutHandler = async () => {
     await dispatch(logOut());
@@ -58,16 +57,25 @@ const SideBar = () => {
             </IconContext.Provider>
           </span>
           <div className={styles["sidebar__user"]}>
-            <span className={styles["sidebar__user--image"]}>
-              <IconContext.Provider
-                value={{
-                  size: "4rem",
-                }}
-              >
-                <IoPersonCircleSharp />
-              </IconContext.Provider>
+            {user.imageUrl && (
+              <span className={styles["sidebar__user--image"]}>
+                <img src={user.imageUrl} alt={user.userName} />
+              </span>
+            )}
+            {!user.imageUrl && (
+              <span className={styles["sidebar__user--image-icon"]}>
+                <IconContext.Provider
+                  value={{
+                    size: "4.6rem",
+                  }}
+                >
+                  <IoPersonCircleSharp />
+                </IconContext.Provider>
+              </span>
+            )}
+            <span className={styles["sidebar__user--name"]}>
+              {user.userName}
             </span>
-            <span className={styles["sidebar__user--name"]}>{userName}</span>
           </div>
           <nav className={styles["sidebar__nav"]}>
             <li className={styles["sidebar__nav__list"]}>

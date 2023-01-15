@@ -26,6 +26,19 @@
     right: 0rem;
     border-left: 0.4rem solid var(--color-primary);
     &--image {
+      display: grid;
+      place-items: center;
+      margin-right: 1rem;
+      img {
+        width: 4.6rem;
+        height: 4.6rem;
+        border-radius: 50%;
+        border: 0.4rem solid var(--color-grey-dark-1);
+      }
+    }
+    &--image-icon {
+      display: grid;
+      place-items: center;
       margin-right: 1rem;
     }
   }

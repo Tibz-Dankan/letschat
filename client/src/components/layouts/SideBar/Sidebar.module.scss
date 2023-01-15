@@ -33,7 +33,7 @@
         width: 4.6rem;
         height: 4.6rem;
         border-radius: 50%;
-        border: 0.4rem solid var(--color-grey-dark-1);
+        border: 0.4rem solid var(--color-grey-dark-3);
       }
     }
     &--image-icon {
@@ -48,42 +48,27 @@
     &__list {
       text-align: start;
       list-style: none;
+      padding: 0.8rem;
+      border: 0.1rem solid var(--color-grey-dark-3);
+      border-radius: 0.4rem;
+      margin-bottom: 1.2rem;
+      &:hover,
+      &:focus {
+        background-color: var(--color-grey-dark-3);
+        transition: 0.35s;
+      }
       &__link {
         text-decoration: none;
         color: var(--color-grey-light-1);
         display: flex;
         align-items: center;
-        margin-bottom: 0.4rem;
         // &--icon {
         //   margin-right: 0.8rem;
         // }
         &--text {
-          margin-left: 0.8rem;
+          margin-left: 1.6rem;
           margin-top: -0.4rem;
-          text-transform: uppercase;
         }
-      }
-      &__link:hover,
-      &__link:focus {
-        color: var(--color-primary);
-        transition: 0.3s;
-      }
-    }
-  }
-  &__logout {
-    text-align: start;
-    padding-top: 1rem;
-    &-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--color-grey-light-1);
-      color: var(--color-grey-dark-4);
-      padding: 0.2rem 0.4rem;
-      border: 0.2rem solid var(--color-grey-light-1);
-      border-radius: 0.4rem;
-      &--icon {
-        margin-right: 0.2rem;
       }
     }
   }

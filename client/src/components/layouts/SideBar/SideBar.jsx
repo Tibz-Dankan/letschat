@@ -158,26 +158,27 @@ const SideBar = () => {
                 </span>
               </NavLink>
             </li>
+            <li className={styles["sidebar__nav__list"]}>
+              <NavLink
+                to="login"
+                className={styles["sidebar__nav__list__link"]}
+                onClick={() => logOutHandler()}
+              >
+                <span className={styles["sidebar__nav__list__link--icon"]}>
+                  <IconContext.Provider
+                    value={{
+                      size: "2rem",
+                    }}
+                  >
+                    <RiLogoutCircleRLine />
+                  </IconContext.Provider>
+                </span>
+                <span className={styles["sidebar__nav__list__link--text"]}>
+                  Log out
+                </span>
+              </NavLink>
+            </li>
           </nav>
-          <div className={styles["sidebar__logout"]}>
-            <button
-              onClick={() => logOutHandler()}
-              className={styles["sidebar__logout-btn"]}
-            >
-              <span className={styles["sidebar__logout-btn--icon"]}>
-                <IconContext.Provider
-                  value={{
-                    size: "1.6rem",
-                  }}
-                >
-                  <RiLogoutCircleRLine />
-                </IconContext.Provider>
-              </span>
-              <span className={styles["sidebar__logout-btn--text"]}>
-                Log out
-              </span>
-            </button>
-          </div>
           <footer className={styles["sidebar__footer"]}>
             <span>LetsChat &copy; {new Date().getFullYear()}</span>
           </footer>

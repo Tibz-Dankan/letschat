@@ -1,3 +1,15 @@
-.chat-page {
-  color: seagreen;
+.chat {
+  background-color: var(--color-grey-dark-4);
+  display: flex;
+  align-items: center;
+  &__welcome-bg {
+    font-size: 1.6rem;
+    flex-grow: 2;
+    display: grid;
+    place-items: center;
+    background-color: var(--color-grey-dark-4);
+    color: var(--color-grey-dark-2);
+    opacity: 0.8;
+    height: 100vh;
+  }
 }

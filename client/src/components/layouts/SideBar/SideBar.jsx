@@ -181,9 +181,7 @@ const SideBar = () => {
           </nav>
           <footer className={styles["sidebar__footer"]}>
             <div className={styles["sidebar__footer__content"]}>
-              <span>
-                LetsChat &copy; {new Date().getFullYear()}. All rights reserved
-              </span>
+              <span>LetsChat &copy; {new Date().getFullYear()}</span>
             </div>
           </footer>
         </div>

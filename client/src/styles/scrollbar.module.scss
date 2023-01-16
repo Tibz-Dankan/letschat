@@ -1,0 +1,49 @@
+.scroll-bar {
+  // SCROLLBAR STYLES FOR WEBKIT BROWSERS
+  &::-webkit-scrollbar {
+    width: 0.6rem;
+    height: auto;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      to bottom,
+      var(--color-grey-dark-3),
+      var(--color-primary-dark),
+      var(--color-grey-dark-3)
+    );
+    border-radius: 0.8rem;
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--color-grey-dark-4);
+  }
+  // SCROLLBAR STYLES FOR FIREFOX
+  &::-moz-scrollbar {
+    width: 0.8rem;
+    height: auto;
+  }
+  &::-moz-scrollbar-thumb {
+    background: linear-gradient(
+      to bottom,
+      var(--color-grey-dark-3),
+      var(--color-primary-dark),
+      var(--color-grey-dark-3)
+    );
+    border-radius: 0.8rem;
+  }
+  &::-moz-scrollbar-track {
+    background: var(--color-grey-dark-2);
+  }
+  // SCROLLBAR STYLES FOR INTERNET EXPLORER
+  .ie ::-ms-thumb {
+    background: linear-gradient(
+      to bottom,
+      var(--color-grey-dark-3),
+      var(--color-primary-dark),
+      var(--color-grey-dark-3)
+    );
+    border-radius: 0.8rem;
+  }
+  .ie ::-ms-track {
+    background: var(--color-grey-dark-2);
+  }
+}

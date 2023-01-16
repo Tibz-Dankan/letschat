@@ -7,12 +7,13 @@ import { FaWindowClose } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoPersonCircleSharp } from "react-icons/io5";
 import { IoArrowBackOutline } from "react-icons/io5";
+import Image from "../../UI/Image/Image";
 import styles from "./ChatInBoxHeader.module.scss";
 
 const ChatInBoxHeader = () => {
   const dispatch = useDispatch();
   const isOpenSideBar = useSelector((state) => state.sidebar.isOpenSideBar);
-  const userImage = useSelector((state) => state.auth.user.userImageUrl);
+  const userImage = useSelector((state) => state.chat.chatMate.imageUrl);
   const chatMateName = useSelector((state) => state.chat.chatMate.userName);
 
   const closeSideBarHandler = async () => {
@@ -45,7 +46,13 @@ const ChatInBoxHeader = () => {
               </Link>
             </nav>
             <div className={styles["header__chat-mate__data"]}>
-              {userImage && <img alt="myPic" />}
+              {userImage && (
+                <Image
+                  src={userImage}
+                  alt="photo"
+                  class={styles["header__chat-mate__data--image"]}
+                />
+              )}
               {!userImage && (
                 <span
                   className={
@@ -54,7 +61,7 @@ const ChatInBoxHeader = () => {
                 >
                   <IconContext.Provider
                     value={{
-                      size: "4rem",
+                      size: "4.8rem",
                     }}
                   >
                     <IoPersonCircleSharp />

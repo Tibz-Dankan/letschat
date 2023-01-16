@@ -73,9 +73,34 @@
     }
   }
   &__footer {
-    text-align: start;
+    // text-align: start;
+    color: var(--color-grey-dark-1);
     position: absolute;
-    bottom: 1rem;
-    font-size: 1rem;
+    bottom: 0rem;
+    left: 0rem;
+    right: 0rem;
+    width: 100%;
+    font-size: 1.2rem;
+    &__content {
+      padding: 2.4rem;
+      text-align: center;
+      position: relative;
+      &::before {
+        content: "";
+        height: 0.1rem;
+        position: absolute;
+        top: 0rem;
+        left: 0rem;
+        right: 0rem;
+        background-image: linear-gradient(
+          to right,
+          var(--color-primary),
+          hsl(221.8, 75%, 26.7%),
+          var(--color-primary-dark),
+          hsl(274.9, 86%, 36.5%),
+          var(--color-secondary)
+        );
+      }
+    }
   }
 }

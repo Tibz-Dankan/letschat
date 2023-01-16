@@ -180,7 +180,11 @@ const SideBar = () => {
             </li>
           </nav>
           <footer className={styles["sidebar__footer"]}>
-            <span>LetsChat &copy; {new Date().getFullYear()}</span>
+            <div className={styles["sidebar__footer__content"]}>
+              <span>
+                LetsChat &copy; {new Date().getFullYear()}. All rights reserved
+              </span>
+            </div>
           </footer>
         </div>
       </section>

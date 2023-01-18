@@ -30,6 +30,11 @@
       }
     }
   }
+  &--is-clicked {
+    transition: 0.35s;
+    background-color: var(--color-grey-dark-3);
+  }
+
   &__content {
     padding: 2.4rem 0rem;
     height: 90vh;

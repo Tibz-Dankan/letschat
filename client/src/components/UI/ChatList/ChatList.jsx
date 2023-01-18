@@ -11,6 +11,8 @@ import Image from "../Image/Image";
 
 const ChatList = ({ socket }) => {
   const chatMates = useSelector((state) => state.chat.allChatMates);
+  const chatMateUserId = useSelector((state) => state.chat.chatMate.userId);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentUserIndex = useSelector((state) => state.auth.user.userIndex);
@@ -21,6 +23,11 @@ const ChatList = ({ socket }) => {
     await dispatch(updateChatMateData(chatMate));
     socket.emit("joinRoom", chatRoomId);
     navigate("/chat-room", { replace: false });
+  };
+
+  const isClicked = (chatMateId) => {
+    if (!chatMateId) return;
+    return chatMateId === chatMateUserId;
   };
 
   return (
@@ -37,7 +44,9 @@ const ChatList = ({ socket }) => {
             return (
               <div
                 key={chatMate.userId}
-                className={styles["chat__list__chat-mate"]}
+                className={`${styles["chat__list__chat-mate"]} ${isClicked(
+                  chatMate.userId
+                ) && styles["chat__list--is-clicked"]}`}
               >
                 {!chatMate.imageUrl && (
                   <span

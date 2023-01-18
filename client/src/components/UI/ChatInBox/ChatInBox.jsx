@@ -11,6 +11,7 @@ import { IconContext } from "react-icons";
 import ChatInBoxHeader from "../../layouts/ChatInBoxHeader/ChatInBoxHeader";
 // import Modernizr from "modernizr";
 import { ChatDate } from "../../../utils/chatDate";
+import { Chat } from "../../../utils/chat";
 import styles from "./ChatInBox.module.scss";
 
 const ChatInBox = ({ socket }) => {
@@ -61,6 +62,8 @@ const ChatInBox = ({ socket }) => {
     };
     getChatMessages();
   }, [chatRoomId, token]);
+
+  const chatMessages = new Chat(messages).organize();
 
   const getDay = (dateObject) => {
     const date = new Date(JSON.parse(dateObject).date);
@@ -156,25 +159,32 @@ const ChatInBox = ({ socket }) => {
           <ChatInBoxHeader />
         </div>
         <ScrollToBottom className={styles["chat-in-box__message"]}>
-          {messages.map((msgObject, index) => {
+          {chatMessages.map((msgObject, index) => {
             return (
               <div
                 key={index}
-                id={styles["single-message"]}
                 className={
                   currentUserId === msgObject.senderId
-                    ? styles["chat-in-box__message--sender"]
-                    : styles["chat-in-box__message--recipient"]
+                    ? `${
+                        styles["chat-in-box__message--sender"]
+                      } ${msgObject.day && styles["has-unique-day"]}`
+                    : `${
+                        styles["chat-in-box__message--recipient"]
+                      } ${msgObject.day && styles["has-unique-day"]}`
                 }
               >
+                {msgObject.day && (
+                  <div className={styles["has-unique-day__container"]}>
+                    <span className={styles["has-unique-day__container--day"]}>
+                      {getDay(msgObject.date)}
+                    </span>
+                  </div>
+                )}
                 <div className={styles["content"]}>
                   <span className={styles["content--text"]}>
                     {msgObject.message}
                   </span>
                   <div className={styles["content__date"]}>
-                    <span className={styles["content__date--date"]}>
-                      {getDay(msgObject.date)}
-                    </span>
                     <span className={styles["content__date--time"]}>
                       {getTime(msgObject.date)}
                     </span>

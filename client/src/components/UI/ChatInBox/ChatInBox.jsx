@@ -10,6 +10,7 @@ import { IoSendSharp } from "react-icons/io5";
 import { IconContext } from "react-icons";
 import ChatInBoxHeader from "../../layouts/ChatInBoxHeader/ChatInBoxHeader";
 // import Modernizr from "modernizr";
+import { ChatDate } from "../../../utils/chatDate";
 import styles from "./ChatInBox.module.scss";
 
 const ChatInBox = ({ socket }) => {
@@ -61,19 +62,14 @@ const ChatInBox = ({ socket }) => {
     getChatMessages();
   }, [chatRoomId, token]);
 
-  // provides format  -> Sun Jul 03 2022;
-  const getDateString = (dateObject) => {
+  const getDay = (dateObject) => {
     const date = new Date(JSON.parse(dateObject).date);
-    return date.toDateString();
+    return new ChatDate(date).day();
   };
-  //provides format  -> 3:47 AM
+
   const getTime = (dateObject) => {
     const date = new Date(JSON.parse(dateObject).date);
-    return date.toLocaleTimeString("en-Us", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    });
+    return new ChatDate(date).time();
   };
 
   // function to send text message to the server
@@ -176,9 +172,9 @@ const ChatInBox = ({ socket }) => {
                     {msgObject.message}
                   </span>
                   <div className={styles["content__date"]}>
-                    {/* <span className={styles["content__date--date"]}>
-                      {getDateString(msgObject.date)}
-                    </span> */}
+                    <span className={styles["content__date--date"]}>
+                      {getDay(msgObject.date)}
+                    </span>
                     <span className={styles["content__date--time"]}>
                       {getTime(msgObject.date)}
                     </span>

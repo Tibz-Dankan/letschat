@@ -1,9 +1,52 @@
-.home-page {
-  background-color: lightblue;
-  &__heading {
-    color: green;
+.landing-page {
+  font-size: 24px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &-logo {
+      color: hsl(187.4, 80.2%, 41.6%);
+    }
+
+    &-nav {
+      ul {
+        list-style: none;
+        display: flex;
+
+        li {
+          margin-right: 1rem;
+        }
+      }
+    }
+
+    &-content {
+      display: flex;
+      justify-content: space-between;
+
+      &-text {
+        p {
+          margin-bottom: 1rem;
+        }
+      }
+    }
   }
-  &__content {
-    color: purple;
+
+  &__about {
+    display: flex;
+    justify-content: space-between;
+
+    &-text {
+      &-image {
+        img {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  &__footer {
+    text-align: center;
   }
 }

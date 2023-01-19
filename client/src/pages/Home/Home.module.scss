@@ -1,13 +1,15 @@
-.landing-page {
-  font-size: 24px;
+.home {
+  font-size: 2.4rem;
+  background-color: var(--color-grey-dark-4);
 
   &__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 100vh;
 
     &-logo {
-      color: hsl(187.4, 80.2%, 41.6%);
+      color: var(--color-primary);
     }
 
     &-nav {

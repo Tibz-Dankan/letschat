@@ -4,6 +4,13 @@ import chatImage from "../../assets/chat-image-one.png";
 import styles from "./Home.module.scss";
 
 const Home = () => {
+  const viewAbout = () => {
+    const about = document.querySelector("#about");
+    about.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
   return (
     <Fragment>
       <div className={styles["home"]}>
@@ -12,7 +19,7 @@ const Home = () => {
             <span className={styles["home__header-logo"]}>LetsChat</span>
             <nav className={styles["home__header-nav"]}>
               <ul>
-                <li>
+                <li onClick={() => viewAbout()}>
                   <NavLink to="#" className={styles["link"]}>
                     About
                   </NavLink>
@@ -48,7 +55,7 @@ const Home = () => {
             <div className={styles["home__header__content-image"]}></div>
           </div>
         </header>
-        <section className={styles["home__about"]}>
+        <section id="about" className={styles["home__about"]}>
           <div className={styles["home__about-text"]}>
             <p>
               LetsChat is online messaging platform that lets you chat with

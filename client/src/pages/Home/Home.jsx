@@ -45,10 +45,7 @@ const Home = () => {
                 </Link>
               </button>
             </div>
-            <div className={styles["home__header__content-image"]}>
-              <img src={chatImage} alt="chat-image" />
-              {/* <span>bg image here</span> */}
-            </div>
+            <div className={styles["home__header__content-image"]}></div>
           </div>
         </header>
         <section className={styles["home__about"]}>

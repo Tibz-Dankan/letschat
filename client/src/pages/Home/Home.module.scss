@@ -71,13 +71,14 @@
         &--title {
           font-size: 3.6rem;
           font-weight: bold;
+          letter-spacing: 0.2rem;
           text-transform: uppercase;
           color: var(--color-grey-light-3);
         }
         &--detail {
           text-align: start;
           line-height: 2rem;
-          margin: 0.8rem 0rem;
+          margin: 1.2rem 0rem;
           color: var(--color-grey-light-4);
         }
         button {
@@ -97,18 +98,17 @@
       }
       &-image {
         width: 50%;
-        // background-color: green;
-        // background-image: linear-gradient(
-        //   to right,
-        //   var(--color-grey-light-4),
-        //   url("../../assets/chat-image-one.png")
-        // );
-        img {
-          width: 100%;
-          border-radius: 0.4rem;
-          box-shadow: var(--shadow-dark);
-          filter: opacity(0.75);
-        }
+        height: 90%;
+        background-image: linear-gradient(
+            to bottom,
+            hsla(189.3, 84.7%, 28.2%, 0.8),
+            hsla(210, 13.8%, 88.6%, 0.08),
+            hsla(210, 10.3%, 22.7%, 0.8)
+          ),
+          url("../../assets/chat-image-one.png");
+        background-size: cover;
+        border-radius: 3.2rem;
+        box-shadow: 0.4rem 0.4rem 0.2rem hsla(210, 10.8%, 14.5%, 0.15);
       }
     }
   }

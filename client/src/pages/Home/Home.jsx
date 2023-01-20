@@ -58,7 +58,10 @@ const Home = () => {
           <div className={styles["home__about-image"]}></div>
         </section>
         <footer className={styles["home__footer"]}>
-          <p>LetsChat &copy; {new Date().getFullYear()}. All rights reserved</p>
+          <span>
+            LetsChat &copy; {new Date().getFullYear()}. All rights reserved |
+          </span>
+          <span> LetsChat is a product of Tibz</span>
         </footer>
       </div>
     </Fragment>

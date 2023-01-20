@@ -127,6 +127,30 @@
   }
 
   &__footer {
+    width: 100%;
+    margin-top: 6.4rem;
+    padding: 2.4rem 0rem;
     text-align: center;
+    position: relative;
+    &::before {
+      content: "";
+      height: 0.2rem;
+      position: absolute;
+      top: 0rem;
+      left: 0rem;
+      right: 0rem;
+      background-image: linear-gradient(
+        to right,
+        var(--color-primary),
+        hsl(221.8, 75%, 26.7%),
+        var(--color-primary-dark),
+        hsl(274.9, 86%, 36.5%),
+        var(--color-secondary)
+      );
+    }
+    span {
+      font-size: 1.4rem;
+      color: var(--color-grey-dark-2);
+    }
   }
 }

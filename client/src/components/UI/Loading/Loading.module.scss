@@ -27,3 +27,92 @@
     }
   }
 }
+
+.user-skeleton {
+  padding: 0rem 2.4rem;
+
+  &__content {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-basis: 1;
+    padding: 0.8rem;
+    border: 0.1rem solid var(--color-grey-dark-3);
+    border-radius: 0.4rem;
+    margin-bottom: 0.8rem;
+
+    %animate-image-placeholder {
+      --bg-color-variant: hsl(210, 10.3%, 15%);
+
+      &::before {
+        content: "";
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0rem;
+        bottom: 0rem;
+        left: 0rem;
+        right: 0rem;
+        border-radius: 50%;
+
+        animation: change-bg-color 0.8s ease-in-out infinite;
+        @keyframes change-bg-color {
+          0% {
+            background-color: var(--color-grey-dark-3);
+            opacity: 0%;
+          }
+          100% {
+            background-color: var(--bg-color-variant);
+            opacity: 100%;
+          }
+        }
+      }
+    }
+
+    %animate-user-data {
+      --bg-color-variant: hsl(210, 10.3%, 15%);
+      &::before {
+        content: "";
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0rem;
+        bottom: 0rem;
+        left: 0rem;
+        right: 0rem;
+        border-radius: 0.8rem;
+
+        animation: change-bg-color 0.8s ease-in-out infinite;
+        @keyframes change-bg-color {
+          0% {
+            background-color: var(--color-grey-dark-3);
+            opacity: 0%;
+          }
+          100% {
+            background-color: var(--bg-color-variant);
+            opacity: 100%;
+          }
+        }
+      }
+    }
+
+    .image-placeholder {
+      width: 4.6rem;
+      height: 4.6rem;
+      background-color: var(--color-grey-dark-3);
+      border-radius: 50%;
+      margin-right: 0.8rem;
+      position: relative;
+      @extend %animate-image-placeholder;
+    }
+
+    .user__data-placeholder {
+      flex-grow: 2;
+      height: 4.6rem;
+      background-color: var(--color-grey-dark-3);
+      border-radius: 0.8rem;
+      position: relative;
+      @extend %animate-user-data;
+    }
+  }
+}

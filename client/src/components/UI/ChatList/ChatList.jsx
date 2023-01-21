@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./ChatList.module.scss";
 import styledScrollbar from "../../../styles/scrollbar.module.scss";
+import Loading from "../Loading/Loading";
 import { IconContext } from "react-icons";
 import { IoPersonCircleSharp } from "react-icons/io5";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,7 +10,7 @@ import { updateChatMateData } from "../../../store/actions/chat";
 import { generateChatRoomId } from "../../../utils/generateChatRoomId";
 import Image from "../Image/Image";
 
-const ChatList = ({ socket }) => {
+const ChatList = ({ socket, isLoading }) => {
   const chatMates = useSelector((state) => state.chat.allChatMates);
   const chatMateUserId = useSelector((state) => state.chat.chatMate.userId);
 
@@ -40,6 +41,7 @@ const ChatList = ({ socket }) => {
         <div
           className={`${styles["chat__list__content"]} ${styledScrollbar["scroll-bar"]}`}
         >
+          {isLoading && <Loading event={"on-loading-users"} />}
           {chatMates.map((chatMate) => {
             return (
               <div

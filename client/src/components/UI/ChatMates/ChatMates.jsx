@@ -1,6 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FadeLoader } from "react-spinners";
 import ChatList from "../ChatList/ChatList";
 import styles from "./ChatMates.module.scss";
 import { getChatMates } from "../../../store/actions/chat";
@@ -29,14 +28,8 @@ const ChatMates = ({ socket }) => {
 
   return (
     <Fragment>
-      <div className={styles["users__container"]}>
-        {isLoading && (
-          // TODO: build custom loading spinner and should be a component
-          <div className={styles["fade__loader__container"]}>
-            <FadeLoader className={styles["fade__loader"]} />
-          </div>
-        )}
-        <ChatList socket={socket} />
+      <div className={styles["chat-mates"]}>
+        <ChatList socket={socket} isLoading={isLoading} />
       </div>
     </Fragment>
   );

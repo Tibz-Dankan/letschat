@@ -124,20 +124,41 @@
   &__about {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
+    &-image {
+      height: 40rem;
+      width: 45%;
+      background-image: linear-gradient(
+          to right,
+          hsla(187.4, 80.2%, 41.6%, 0.8),
+          hsla(206.5, 95.8%, 72.2%, 0.1)
+        ),
+        url("../../assets/chat-image-five.png");
+      background-size: cover;
+      border-radius: 3.2rem;
+    }
     &-text {
-      &-image {
-        img {
-          width: 100%;
-        }
+      &--title {
+        font-size: 2.4rem;
+        font-weight: bold;
+        margin-bottom: 1.2rem;
       }
+      // color: var(--color-grey-light-2);
+      color: var(--color-grey-light-4);
+      width: 50%;
+      background-color: var(--color-grey-dark-3);
+      border-radius: 0.4rem;
+      padding: 1.6rem;
+      text-align: start;
+      line-height: 2.4rem;
     }
   }
 
   &__footer {
     width: 100%;
     margin-top: 6.4rem;
-    padding: 2.4rem 0rem;
+    padding: 2.4rem 0rem 1.2rem 0rem;
     text-align: center;
     position: relative;
     &::before {

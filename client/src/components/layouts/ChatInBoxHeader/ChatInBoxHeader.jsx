@@ -47,7 +47,7 @@ const ChatInBoxHeader = () => {
             </nav>
             <div className={styles["header__chat-mate__data"]}>
               {userImage && (
-                <div class={styles["image-container"]}>
+                <div className={styles["image-container"]}>
                   <Image
                     src={userImage}
                     alt="photo"

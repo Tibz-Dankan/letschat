@@ -9,6 +9,7 @@ jobs:
       run:
         working-directory: "./client"
     steps:
+      - run: pwd # with respect to working-directory
       - uses: actions/checkout@v3 #Gets the react code
       - uses: actions/setup-node@v3 #Sets up node environment
         with:

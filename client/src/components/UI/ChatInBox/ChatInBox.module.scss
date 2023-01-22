@@ -14,7 +14,14 @@
   }
 
   &__message {
-    background-image: url("../../../assets/bg-image-eight.jpeg");
+    background-image: linear-gradient(
+        to bottom,
+        hsla(189.3, 84.7%, 28.2%, 0.2),
+        hsla(210, 10.8%, 14.5%, 0.6),
+        hsla(210, 10.8%, 14.5%, 0.6),
+        hsla(189.3, 84.7%, 28.2%, 0.4)
+      ),
+      url("../../../assets/bg-image-eight.jpeg");
     background-size: cover;
     background-color: var(--color-grey-dark-4);
     color: var(--color-grey-light-3);

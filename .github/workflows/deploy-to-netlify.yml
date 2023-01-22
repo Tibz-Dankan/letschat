@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ env.WORKING_DIR }} #Getting the dir value
+        working-directory: ${{ env.WORKING_DIR }} #Getting the directory value
     steps:
       - run: pwd # with respect to working-directory
       - uses: actions/checkout@v3 #Gets the react code

@@ -19,7 +19,7 @@ let baseUrl;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   baseUrl = "http://localhost:5000";
 } else {
-  baseUrl = "some production url here";
+  baseUrl = "https://letschat-backend.onrender.com";
 }
 
 export { baseUrl };

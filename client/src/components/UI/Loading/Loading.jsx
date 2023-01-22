@@ -21,9 +21,9 @@ const Loading = (props) => {
     <Fragment>
       {onFormSubmit && <div className={styles["loading-spinner"]}></div>}
       {OnLoadingUsers &&
-        userSkeletons.map((_, __) => {
+        userSkeletons.map((_, index) => {
           return (
-            <div className={styles["user-skeleton"]}>
+            <div key={index} className={styles["user-skeleton"]}>
               <div className={styles["user-skeleton__content"]}>
                 <div className={styles["image-placeholder"]}></div>
                 <div className={styles["user__data-placeholder"]}></div>
@@ -33,9 +33,9 @@ const Loading = (props) => {
         })}
       {OnLoadingMessages && (
         <div className={styles["messages-skeleton"]}>
-          {messageSkeletons.map((_, __) => {
+          {messageSkeletons.map((_, index) => {
             return (
-              <section className={styles["messages"]}>
+              <section key={index} className={styles["messages"]}>
                 <div className={styles["messages__recipient"]}>
                   <div
                     className={styles["messages__recipient--recipient"]}

@@ -87,6 +87,7 @@
         position: relative;
         min-width: 6.4rem;
         width: auto;
+        max-width: 32rem;
         min-height: 3.2rem;
         border-radius: 0.4rem;
 
@@ -129,6 +130,7 @@
         position: relative;
         min-width: 6.4rem;
         width: auto;
+        max-width: 32rem;
         min-height: 3.2rem;
         border-radius: 0.4rem;
         &::before {

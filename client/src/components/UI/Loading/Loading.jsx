@@ -3,7 +3,7 @@ import styles from "./Loading.module.scss";
 
 const Loading = (props) => {
   let onFormSubmit, OnLoadingUsers, OnLoadingMessages;
-  let userSkeletons;
+  let userSkeletons, messageSkeletons;
 
   if (props.event === "on-form-submit") {
     onFormSubmit = props.event;
@@ -12,6 +12,7 @@ const Loading = (props) => {
     userSkeletons = [1, 2, 3, 4, 5, 6, 7];
   } else if (props.event === "on-loading-messages") {
     OnLoadingMessages = props.event;
+    messageSkeletons = [1, 2, 3];
   } else {
     onFormSubmit = props.event;
   }
@@ -32,7 +33,20 @@ const Loading = (props) => {
         })}
       {OnLoadingMessages && (
         <div className={styles["messages-skeleton"]}>
-          Loading message Skeleton
+          {messageSkeletons.map((_, __) => {
+            return (
+              <section className={styles["messages"]}>
+                <div className={styles["messages__recipient"]}>
+                  <div
+                    className={styles["messages__recipient--recipient"]}
+                  ></div>
+                </div>
+                <div className={styles["messages__sender"]}>
+                  <div className={styles["messages__sender--sender"]}></div>
+                </div>
+              </section>
+            );
+          })}
         </div>
       )}
     </Fragment>

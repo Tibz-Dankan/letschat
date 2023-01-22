@@ -9,7 +9,7 @@ import { generateChatRoomId } from "../../../utils/generateChatRoomId";
 import { IoSendSharp } from "react-icons/io5";
 import { IconContext } from "react-icons";
 import ChatInBoxHeader from "../../layouts/ChatInBoxHeader/ChatInBoxHeader";
-// import Modernizr from "modernizr";
+import Loading from "../Loading/Loading";
 import { ChatDate } from "../../../utils/chatDate";
 import { Chat } from "../../../utils/chat";
 import styles from "./ChatInBox.module.scss";
@@ -26,12 +26,9 @@ const ChatInBox = ({ socket }) => {
   const currentUserId = useSelector((state) => state.auth.user.userId);
   const chatRoomId = generateChatRoomId(chatMateUserIndex, currentUserIndex);
   const navigate = useNavigate();
-  // const msgDivRef = useRef(null);
   const effectRan = useRef(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // if (Modernizr.ie) {
-  //   document.body.classList.add("ie");
-  // }
   if (navigator.userAgent.indexOf("Trident/") > -1) {
     document.body.classList.add("ie");
   }
@@ -39,6 +36,7 @@ const ChatInBox = ({ socket }) => {
   useMemo(() => {
     const getChatMessages = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch(
           `${baseUrl}/api/chats/chat-messages/${chatRoomId}`,
           {
@@ -49,6 +47,7 @@ const ChatInBox = ({ socket }) => {
             }),
           }
         );
+        setIsLoading(false);
         if (!response.ok) {
           const error = await response.json();
           //   Dispatch an alert msg
@@ -119,34 +118,6 @@ const ChatInBox = ({ socket }) => {
 
   const color = "white";
 
-  // const className={css`
-  //   padding: 32px;
-  //   background-color: hotpink;
-  //   font-size: 24px;
-  //   border-radius: 4px;
-  //   &:hover {
-  //     color: ${color};
-  //   }
-  // `}
-
-  //   css`
-  // &::scrollbar {
-  //   width: 0.8rem;
-  //   height: auto;
-  // }
-  // &::scrollbar-thumb {
-  //   background: linear-gradient(
-  //     to bottom,
-  //     var(--color-grey-dark-3),
-  //     var(--color-primary-dark),
-  //     var(--color-grey-dark-3)
-  //   );
-  //   border-radius: 0.8rem;
-  // }
-  // &::scrollbar-track {
-  //   background: var(--color-grey-dark-2);
-  // }
-  // `
   const ROOT_CSS = css({
     height: 600,
     width: 400,
@@ -159,6 +130,7 @@ const ChatInBox = ({ socket }) => {
           <ChatInBoxHeader />
         </div>
         <ScrollToBottom className={styles["chat-in-box__message"]}>
+          {isLoading && <Loading event={"on-loading-messages"} />}
           {chatMessages.map((msgObject, index) => {
             return (
               <div

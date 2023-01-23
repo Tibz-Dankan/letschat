@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const theInitialState = {
   allChatMates: [],
+  exploreChatMates: [],
   chatMate: {},
   messages: [],
 };
@@ -14,6 +15,12 @@ export const chatSlice = createSlice({
     },
     clearAllChatMatesData(state) {
       state.allChatMates = [];
+    },
+    updateExploreChatMates(state, action) {
+      state.exploreChatMates = action.payload.exploreChatMates;
+    },
+    clearExploreChatMates(state) {
+      state.exploreChatMates = [];
     },
     updateChatMateData(state, action) {
       state.chatMate = action.payload.chatMate;

@@ -64,3 +64,33 @@ export const getChatMates = (userId, token) => {
     await dispatch(chatActions.updateAllChatMatesData({ allChatMates: data }));
   };
 };
+
+export const getExploreChatMates = (userId, token) => {
+  return async (dispatch) => {
+    const response = await fetch(
+      `${baseUrl}/api/chats/explore-chat-mates/${userId}`,
+      {
+        method: "GET",
+        headers: new Headers({
+          Authorization: "Bearer " + token,
+        }),
+      }
+    );
+
+    console.log("Explore chatMates response");
+    console.log(response);
+    if (!response.ok) {
+      const error = await response.json();
+      console.log("error");
+      console.log(error);
+
+      throw new Error(error.message);
+    }
+    const data = await response.json();
+    console.log("Response data");
+    console.log(data);
+    await dispatch(
+      chatActions.updateExploreChatMates({ exploreChatMates: data })
+    );
+  };
+};

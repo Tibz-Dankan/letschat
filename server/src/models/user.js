@@ -100,4 +100,75 @@ User.updatePhoto = async (userId, imageName, imageUrl) => {
   });
 };
 
+// User.findById = async (userId) => {
+//   return await prisma.user.findMany({
+//     where: {
+//       // userId: userId,
+//       sender: {
+//         senderId: userId,
+//       },
+//     },
+//     include: {
+//       sender: true,
+//       // recipient: true,
+//     },
+//   });
+// };
+
+// User.findById = async (userId) => {
+//   return await prisma.user.findMany({
+//     where: {
+//       userId: {
+//         not: userId,
+//       },
+//     },
+//     select: {
+//       // userIndex: true,
+//       // userId: true,
+//       // email: true,
+//       // userName: true,
+//       // imageUrl: true,
+//       sender: {
+//         where: {
+//           recipientId: userId,
+//         },
+//         distinct: ["recipientId"],
+//         select: {
+//           recipientId: true,
+//         },
+//       },
+//       recipient: {
+//         where: {
+//           recipientId: userId,
+//         },
+//         distinct: ["senderId"],
+//         select: {
+//           senderId: true,
+//         },
+//       },
+//     },
+//   });
+// };
+
+User.findById = async (userId) => {
+  return await prisma.user.findMany({
+    where: {
+      userId: {
+        not: userId,
+      },
+    },
+    select: {
+      sender: {
+        where: {
+          NOT: [{ senderId: userId }, { recipientId: userId }],
+        },
+      },
+      recipient: {
+        where: {
+          NOT: [{ senderId: userId }, { recipientId: userId }],
+        },
+      },
+    },
+  });
+};
 module.exports = User;

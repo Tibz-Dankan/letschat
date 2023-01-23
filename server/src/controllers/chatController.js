@@ -50,6 +50,25 @@ const getChatMessages = asyncHandler(async (req, res, next) => {
   console.log("User getting chat messages");
 });
 
+const getExploreChatMates = asyncHandler(async (req, res, next) => {
+  // TODO: fetch on users you have never chatted with
+  const userId = req.params.userId;
+  if (!userId) return next(new AppError("No users id is provided", 400));
+
+  const user = await User.findById(userId);
+  console.log("user object nature");
+  console.log(user);
+
+  console.log("user sender array nature");
+  console.log(user[0].sender);
+
+  const users = await User.findUsersExceptMe(req.params.userId);
+  if (!users) return next(new AppError("No users found", 404));
+  const usersArray = users;
+  sortUserInfoSendResponse(usersArray, res);
+  console.log("Getting explored users to chat with");
+});
+
 const saveChatMessages = async (chatObj) => {
   await Chat.saveMessage(chatObj);
   console.log("chat saved");

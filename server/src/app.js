@@ -10,7 +10,7 @@ let url;
 
 if (process.env.NODE_ENV === "production") {
   app.use(cors({ origin: process.env.PRODUCTION_URL }));
-  url = PRODUCTION_URL;
+  url = process.env.PRODUCTION_URL;
 } else {
   app.use(cors());
   url = "http://localhost:5173";

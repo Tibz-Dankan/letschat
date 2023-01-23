@@ -6,12 +6,13 @@ require("dotenv").config();
 
 const sortUserInfoSendResponse = (usersArray, res) => {
   const users = [];
-  usersArray.forEach(({ userIndex, userId, userName, email }) => {
+  usersArray.forEach(({ userIndex, userId, userName, email, imageUrl }) => {
     users.push({
       userIndex: userIndex,
       userId: userId,
       userName: userName,
       email: email,
+      imageUrl: imageUrl,
     });
   });
   return res.status(200).json(users);
@@ -34,7 +35,7 @@ const getChatMates = asyncHandler(async (req, res, next) => {
   const userId = req.params.userId;
   if (!userId) return next(new AppError("No users id is provided", 400));
 
-  const users = await User.findUsersExceptMe(req.params.userId);
+  const users = await User.findUsersExceptMe(userId);
   if (!users) return next(new AppError("No users found", 404));
   const usersArray = users;
   sortUserInfoSendResponse(usersArray, res);
@@ -90,4 +91,10 @@ const chatHandler = (io) => {
   });
 };
 
-module.exports = { chatHandler, getUsers, getChatMates, getChatMessages };
+module.exports = {
+  chatHandler,
+  getUsers,
+  getChatMates,
+  getChatMessages,
+  getExploreChatMates,
+};

@@ -16,7 +16,10 @@ const ChatList = ({ socket, isLoading }) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const currentUserIndex = useSelector((state) => state.auth.user.userIndex);
+  const user = useSelector((state) => state.auth.user);
+  const currentUserIndex = user.userIndex;
+  const userImage = user.imageUrl;
+  const userName = user.userName;
 
   // Join chat room
   const joinRoom = async (chatMate) => {
@@ -31,12 +34,70 @@ const ChatList = ({ socket, isLoading }) => {
     return chatMateId === chatMateUserId;
   };
 
+  const isLetter = (str) => {
+    const alphabetRegex = /^[a-zA-Z]$/;
+    return alphabetRegex.test(str);
+  };
+
+  const isSpace = (str) => {
+    const spaceRegex = /\s/;
+    return spaceRegex.test(str);
+  };
+
+  const nameFirstLettersHandler = (name) => {
+    let firstLetters;
+    let nextCharIndex;
+    const nameStr = name.toString();
+
+    for (let index = 0; index < nameStr.length; index++) {
+      const charStr = nameStr[index].toString();
+      if (index === 0 && isLetter(charStr)) {
+        firstLetters = charStr.toString();
+      }
+      if (isSpace(charStr)) {
+        nextCharIndex = index + 1;
+      }
+      const isALetter = isLetter(nameStr[nextCharIndex]?.toString());
+      if (isALetter) {
+        firstLetters = firstLetters + name[nextCharIndex].toString();
+        break;
+      }
+    }
+    return firstLetters.toUpperCase();
+  };
+
   return (
     <Fragment>
       <div className={styles["chat__list"]}>
-        <div className={styles["chat__list__heading"]}>
-          <h5>CHATS</h5>
-          <h5>EXPLORE</h5>
+        <div className={styles["chat__list__header"]}>
+          <div className={styles["chat__list__header__logo"]}>
+            <span className={styles["chat__list__header__logo--text"]}>
+              LetsChat
+            </span>
+          </div>
+          <div className={styles["chat__list__header__user"]}>
+            {!userImage && (
+              <span
+                className={
+                  styles["chat__list__header__user--image-placeholder"]
+                }
+              >
+                <IconContext.Provider value={{ size: "4.8rem" }}>
+                  <IoPersonCircleSharp />
+                </IconContext.Provider>
+              </span>
+            )}
+            {userImage && (
+              <div className={styles["chat__list__header__user--image"]}>
+                <Image src={userImage} alt={"photo"} class={styles["image"]} />
+              </div>
+            )}
+            <span
+              className={styles["chat__list__header__user--name-first-letters"]}
+            >
+              {nameFirstLettersHandler(userName)}
+            </span>
+          </div>
         </div>
         <div
           className={`${styles["chat__list__content"]} ${styledScrollbar["scroll-bar"]}`}

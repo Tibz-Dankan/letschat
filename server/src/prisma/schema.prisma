@@ -17,11 +17,11 @@ datasource db {
 model User {
   userIndex Int       @unique @default(autoincrement())
   userId    String    @id @default(uuid())
-  userName  String
+  userName  String    @db.VarChar(255)
   email     String    @unique
-  password  String
-  imageUrl  String?
-  imageName String?
+  password  String    @db.VarChar(255)
+  imageUrl  String?   @db.VarChar(255)
+  imageName String?   @db.VarChar(255)
   createdAt DateTime  @default(now())
   updateAt  DateTime? @updatedAt
   sender    Chat[]    @relation("sender")
@@ -38,7 +38,7 @@ model Chat {
   recipientId  String
   chatRoomId   String
   date         String
-  message      String
+  message      String  @db.VarChar(300)
   isDelivered  Boolean @default(false)
   isRead       Boolean @default(false)
 

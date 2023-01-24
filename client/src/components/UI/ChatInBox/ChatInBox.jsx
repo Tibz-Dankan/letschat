@@ -15,7 +15,7 @@ import { Chat } from "../../../utils/chat";
 import styles from "./ChatInBox.module.scss";
 
 const ChatInBox = ({ socket }) => {
-  const textRef = useRef(null);
+  const [text, setText] = useState("");
   const [messages, setMessages] = useState([]);
   const token = useSelector((state) => state.auth.token);
   const chatMateUserIndex = useSelector(
@@ -32,6 +32,16 @@ const ChatInBox = ({ socket }) => {
   if (navigator.userAgent.indexOf("Trident/") > -1) {
     document.body.classList.add("ie");
   }
+
+  const textChangeHandler = (event) => {
+    setText(event.target.value);
+  };
+
+  const onPressEnterHandler = (event) => {
+    if (event.key === "Enter") {
+      sendTextMessage(event);
+    }
+  };
 
   useMemo(() => {
     const getChatMessages = async () => {
@@ -80,16 +90,15 @@ const ChatInBox = ({ socket }) => {
     senderId: currentUserId,
     recipientId: chatMateUserId,
     date: JSON.stringify({ date: new Date(Date.now()) }),
-    message: "",
+    message: text,
   };
 
   const sendTextMessage = (event) => {
     event.preventDefault();
-    if (!textRef.current.value) return;
-    msgObject.message = textRef.current.value;
+    if (!text) return;
     socket.emit("sendMessage", msgObject);
     setMessages((msgList) => [...msgList, msgObject]);
-    textRef.current.value = "";
+    setText("");
   };
 
   useEffect(() => {
@@ -105,7 +114,6 @@ const ChatInBox = ({ socket }) => {
   useEffect(() => {
     if (effectRan.current === false) {
       socket.on("receiveMessage", (msg) => {
-        // log("chat messages: " + msg);
         console.log("message received");
         console.log(msg);
         setMessages((msgList) => [...msgList, msg]);
@@ -131,52 +139,56 @@ const ChatInBox = ({ socket }) => {
         </div>
         <ScrollToBottom className={styles["chat-in-box__message"]}>
           {isLoading && <Loading event={"on-loading-messages"} />}
-          {chatMessages.map((msgObject, index) => {
-            return (
-              <div
-                key={index}
-                className={
-                  currentUserId === msgObject.senderId
-                    ? `${
-                        styles["chat-in-box__message--sender"]
-                      } ${msgObject.day && styles["has-unique-day"]}`
-                    : `${
-                        styles["chat-in-box__message--recipient"]
-                      } ${msgObject.day && styles["has-unique-day"]}`
-                }
-              >
-                {msgObject.day && (
-                  <div className={styles["has-unique-day__container"]}>
-                    <span className={styles["has-unique-day__container--day"]}>
-                      {getDay(msgObject.date)}
-                    </span>
+          {!isLoading && (
+            <>
+              {chatMessages.map((msgObject, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={
+                      currentUserId === msgObject.senderId
+                        ? `${
+                            styles["chat-in-box__message--sender"]
+                          } ${msgObject.day && styles["has-unique-day"]}`
+                        : `${
+                            styles["chat-in-box__message--recipient"]
+                          } ${msgObject.day && styles["has-unique-day"]}`
+                    }
+                  >
+                    {msgObject.day && (
+                      <div className={styles["has-unique-day__container"]}>
+                        <span
+                          className={styles["has-unique-day__container--day"]}
+                        >
+                          {getDay(msgObject.date)}
+                        </span>
+                      </div>
+                    )}
+                    <div className={styles["content"]}>
+                      <span className={styles["content--text"]}>
+                        {msgObject.message}
+                      </span>
+                      <div className={styles["content__date"]}>
+                        <span className={styles["content__date--time"]}>
+                          {getTime(msgObject.date)}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                )}
-                <div className={styles["content"]}>
-                  <span className={styles["content--text"]}>
-                    {msgObject.message}
-                  </span>
-                  <div className={styles["content__date"]}>
-                    <span className={styles["content__date--time"]}>
-                      {getTime(msgObject.date)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+                );
+              })}
+            </>
+          )}
         </ScrollToBottom>
         <form className={styles["chat-in-box__form"]}>
           <div className={styles["chat-in-box__form__group"]}>
             <input
               type="text"
-              ref={textRef}
+              // ref={textRef}
+              onChange={(event) => textChangeHandler(event)}
+              value={text}
               className={styles["chat-in-box__form__group__input"]}
-              onKeyPress={(event) => {
-                if (event.key === "Enter") {
-                  sendTextMessage(event);
-                }
-              }}
+              onKeyPress={(event) => onPressEnterHandler(event)}
               required
             />
             <span

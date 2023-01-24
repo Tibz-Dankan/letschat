@@ -28,17 +28,19 @@ model User {
   recipient Chat[]    @relation("recipient")
 }
 
+// TODO: add messageIndex column
 model Chat {
-  messageId   String  @id @default(uuid())
-  sender      User    @relation("sender", fields: [senderId], references: [userId])
-  senderId    String
-  recipient   User    @relation("recipient", fields: [recipientId], references: [userId])
-  recipientId String
-  chatRoomId  String
-  date        String
-  message     String
-  isDelivered Boolean @default(false)
-  isRead      Boolean @default(false)
+  messageIndex Int     @unique @default(autoincrement())
+  messageId    String  @id @default(uuid())
+  sender       User    @relation("sender", fields: [senderId], references: [userId])
+  senderId     String
+  recipient    User    @relation("recipient", fields: [recipientId], references: [userId])
+  recipientId  String
+  chatRoomId   String
+  date         String
+  message      String
+  isDelivered  Boolean @default(false)
+  isRead       Boolean @default(false)
 
   @@index([senderId])
   @@index([recipientId])

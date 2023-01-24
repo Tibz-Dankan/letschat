@@ -17,15 +17,17 @@ CREATE TABLE `User` (
 
 -- CreateTable
 CREATE TABLE `Chat` (
+    `messageIndex` INTEGER NOT NULL AUTO_INCREMENT,
     `messageId` VARCHAR(191) NOT NULL,
     `senderId` VARCHAR(191) NOT NULL,
     `recipientId` VARCHAR(191) NOT NULL,
     `chatRoomId` VARCHAR(191) NOT NULL,
     `date` VARCHAR(191) NOT NULL,
-    `message` VARCHAR(350) NOT NULL,
+    `message` VARCHAR(191) NOT NULL,
     `isDelivered` BOOLEAN NOT NULL DEFAULT false,
     `isRead` BOOLEAN NOT NULL DEFAULT false,
 
+    UNIQUE INDEX `Chat_messageIndex_key`(`messageIndex`),
     INDEX `Chat_senderId_idx`(`senderId`),
     INDEX `Chat_recipientId_idx`(`recipientId`),
     PRIMARY KEY (`messageId`)

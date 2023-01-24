@@ -1,7 +1,5 @@
 import { chatActions } from "../store";
-import { notificationActions } from "../store";
 import { baseUrl } from "../store";
-import { log } from "../../utils/consoleLog";
 
 export const updateAllChatMatesData = (chatMatesArr) => {
   return async (dispatch) => {
@@ -50,18 +48,11 @@ export const getChatMates = (userId, token) => {
       }),
     });
 
-    log(response);
     if (!response.ok) {
       const error = await response.json();
-      console.log("error");
-      console.log(error);
-      // dispatch message here
       throw new Error(error.message);
     }
     const data = await response.json();
-    console.log("Response data");
-    console.log(data);
-    // update user info in the global state
     await dispatch(chatActions.updateAllChatMatesData({ allChatMates: data }));
   };
 };
@@ -82,8 +73,6 @@ export const getChatMessages = async (chatRoomId, token) => {
     throw new Error(error.message);
   }
   const data = await response.json();
-  console.log("data in the fetching function");
-  console.log(data.data);
   return data.data;
 };
 
@@ -99,8 +88,6 @@ export const getExploreChatMates = (userId, token) => {
       }
     );
 
-    console.log("Explore chatMates response");
-    console.log(response);
     if (!response.ok) {
       const error = await response.json();
       console.log("error");
@@ -109,8 +96,6 @@ export const getExploreChatMates = (userId, token) => {
       throw new Error(error.message);
     }
     const data = await response.json();
-    console.log("Response data");
-    console.log(data);
     await dispatch(
       chatActions.updateExploreChatMates({ exploreChatMates: data })
     );

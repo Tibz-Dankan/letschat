@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/6bcac520-5571-4aad-b121-9656df4462fc/deploy-status)](https://app.netlify.com/sites/letschat-frontend/deploys)
+
 # Chat application written in react js, redux, nodejs, mysql and prisma .
 
 ### LetsChat is an online messaging platform that allows you to connect and communicate with a diverse group of users who are available on the platform at any given time.

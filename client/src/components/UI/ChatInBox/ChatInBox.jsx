@@ -1,13 +1,13 @@
 import React, { useState, useEffect, Fragment, useRef, useMemo } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
-import { css } from "@emotion/css";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { log } from "../../../utils/consoleLog";
+import { useSelector, useDispatch } from "react-redux";
 import { baseUrl } from "../../../store/store";
 import { generateChatRoomId } from "../../../utils/generateChatRoomId";
 import { IoSendSharp } from "react-icons/io5";
 import { IconContext } from "react-icons";
+import { getChatMessages } from "../../../store/actions/chat";
+import { notificationActions } from "../../../store/store";
 import ChatInBoxHeader from "../../layouts/ChatInBoxHeader/ChatInBoxHeader";
 import Loading from "../Loading/Loading";
 import { ChatDate } from "../../../utils/chatDate";
@@ -28,78 +28,7 @@ const ChatInBox = ({ socket }) => {
   const navigate = useNavigate();
   const effectRan = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  if (navigator.userAgent.indexOf("Trident/") > -1) {
-    document.body.classList.add("ie");
-  }
-
-  const textChangeHandler = (event) => {
-    setText(event.target.value);
-  };
-
-  const onPressEnterHandler = (event) => {
-    if (event.key === "Enter") {
-      sendTextMessage(event);
-    }
-  };
-
-  useMemo(() => {
-    const getChatMessages = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch(
-          `${baseUrl}/api/chats/chat-messages/${chatRoomId}`,
-          {
-            method: "GET",
-            headers: new Headers({
-              "Content-type": "application/json",
-              Authorization: "Bearer " + token,
-            }),
-          }
-        );
-        setIsLoading(false);
-        if (!response.ok) {
-          const error = await response.json();
-          //   Dispatch an alert msg
-          throw new Error(error.message);
-        }
-        const data = await response.json();
-        setMessages(data.data);
-      } catch (error) {
-        log("error:" + error.message);
-      }
-    };
-    getChatMessages();
-  }, [chatRoomId, token]);
-
-  const chatMessages = new Chat(messages).organize();
-
-  const getDay = (dateObject) => {
-    const date = new Date(JSON.parse(dateObject).date);
-    return new ChatDate(date).day();
-  };
-
-  const getTime = (dateObject) => {
-    const date = new Date(JSON.parse(dateObject).date);
-    return new ChatDate(date).time();
-  };
-
-  // function to send text message to the server
-  const msgObject = {
-    chatRoomId: generateChatRoomId(chatMateUserIndex, currentUserIndex),
-    senderId: currentUserId,
-    recipientId: chatMateUserId,
-    date: JSON.stringify({ date: new Date(Date.now()) }),
-    message: text,
-  };
-
-  const sendTextMessage = (event) => {
-    event.preventDefault();
-    if (!text) return;
-    socket.emit("sendMessage", msgObject);
-    setMessages((msgList) => [...msgList, msgObject]);
-    setText("");
-  };
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const navigateToChat = () => {
@@ -110,13 +39,73 @@ const ChatInBox = ({ socket }) => {
     navigateToChat();
   }, [chatRoomId, navigate]);
 
-  // Getting the text message from the server(backend)
+  const dispatchNotificationHandler = (type, message) => {
+    dispatch(
+      notificationActions.showCardNotification({
+        type: type,
+        message: message,
+      })
+    );
+  };
+
+  useMemo(() => {
+    const getChatMessagesHandler = async () => {
+      try {
+        setIsLoading(true);
+        const myChatMessages = await getChatMessages(chatRoomId, token);
+        setMessages(myChatMessages);
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+        dispatchNotificationHandler(
+          "error",
+          "Sorry something went wrong while fetching your chats"
+        );
+      }
+    };
+    getChatMessagesHandler();
+  }, [chatRoomId, token]);
+
+  const textChangeHandler = (event) => {
+    setText(event.target.value);
+  };
+
+  const onPressEnterHandler = (event) => {
+    if (event.key === "Enter") {
+      sendTextHandler(event);
+    }
+  };
+
+  const getDayHandler = (dateObject) => {
+    const date = new Date(JSON.parse(dateObject).date);
+    return new ChatDate(date).day();
+  };
+
+  const getTimeHandler = (dateObject) => {
+    const date = new Date(JSON.parse(dateObject).date);
+    return new ChatDate(date).time();
+  };
+
+  const messageObj = {
+    chatRoomId: generateChatRoomId(chatMateUserIndex, currentUserIndex),
+    senderId: currentUserId,
+    recipientId: chatMateUserId,
+    date: JSON.stringify({ date: new Date(Date.now()) }),
+    message: text,
+  };
+
+  const sendTextHandler = (event) => {
+    event.preventDefault();
+    if (!text) return;
+    socket.emit("sendMessage", messageObj);
+    setMessages((messageList) => [...messageList, messageObj]);
+    setText("");
+  };
+
   useEffect(() => {
     if (effectRan.current === false) {
-      socket.on("receiveMessage", (msg) => {
-        console.log("message received");
-        console.log(msg);
-        setMessages((msgList) => [...msgList, msg]);
+      socket.on("receiveMessage", (messageObj) => {
+        setMessages((messageList) => [...messageList, messageObj]);
       });
       return () => {
         effectRan.current = true;
@@ -124,12 +113,7 @@ const ChatInBox = ({ socket }) => {
     }
   }, [socket]);
 
-  const color = "white";
-
-  const ROOT_CSS = css({
-    height: 600,
-    width: 400,
-  });
+  const chatMessages = new Chat(messages).organize();
 
   return (
     <Fragment>
@@ -141,36 +125,36 @@ const ChatInBox = ({ socket }) => {
           {isLoading && <Loading event={"on-loading-messages"} />}
           {!isLoading && (
             <>
-              {chatMessages.map((msgObject, index) => {
+              {chatMessages.map((messageObj, index) => {
                 return (
                   <div
                     key={index}
                     className={
-                      currentUserId === msgObject.senderId
+                      currentUserId === messageObj.senderId
                         ? `${
                             styles["chat-in-box__message--sender"]
-                          } ${msgObject.day && styles["has-unique-day"]}`
+                          } ${messageObj.day && styles["has-unique-day"]}`
                         : `${
                             styles["chat-in-box__message--recipient"]
-                          } ${msgObject.day && styles["has-unique-day"]}`
+                          } ${messageObj.day && styles["has-unique-day"]}`
                     }
                   >
-                    {msgObject.day && (
+                    {messageObj.day && (
                       <div className={styles["has-unique-day__container"]}>
                         <span
                           className={styles["has-unique-day__container--day"]}
                         >
-                          {getDay(msgObject.date)}
+                          {getDayHandler(messageObj.date)}
                         </span>
                       </div>
                     )}
                     <div className={styles["content"]}>
                       <span className={styles["content--text"]}>
-                        {msgObject.message}
+                        {messageObj.message}
                       </span>
                       <div className={styles["content__date"]}>
                         <span className={styles["content__date--time"]}>
-                          {getTime(msgObject.date)}
+                          {getTimeHandler(messageObj.date)}
                         </span>
                       </div>
                     </div>
@@ -184,7 +168,6 @@ const ChatInBox = ({ socket }) => {
           <div className={styles["chat-in-box__form__group"]}>
             <input
               type="text"
-              // ref={textRef}
               onChange={(event) => textChangeHandler(event)}
               value={text}
               className={styles["chat-in-box__form__group__input"]}
@@ -192,7 +175,7 @@ const ChatInBox = ({ socket }) => {
               required
             />
             <span
-              onClick={(event) => sendTextMessage(event)}
+              onClick={(event) => sendTextHandler(event)}
               className={styles["chat-in-box__form__group__submit"]}
             >
               <IconContext.Provider value={{ size: "1.5rem" }}>

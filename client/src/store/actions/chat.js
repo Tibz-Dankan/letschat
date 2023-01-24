@@ -1,4 +1,5 @@
 import { chatActions } from "../store";
+import { notificationActions } from "../store";
 import { baseUrl } from "../store";
 import { log } from "../../utils/consoleLog";
 
@@ -63,6 +64,27 @@ export const getChatMates = (userId, token) => {
     // update user info in the global state
     await dispatch(chatActions.updateAllChatMatesData({ allChatMates: data }));
   };
+};
+
+export const getChatMessages = async (chatRoomId, token) => {
+  const response = await fetch(
+    `${baseUrl}/api/chats/chat-messages/${chatRoomId}`,
+    {
+      method: "GET",
+      headers: new Headers({
+        "Content-type": "application/json",
+        Authorization: "Bearer " + token,
+      }),
+    }
+  );
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message);
+  }
+  const data = await response.json();
+  console.log("data in the fetching function");
+  console.log(data.data);
+  return data.data;
 };
 
 export const getExploreChatMates = (userId, token) => {

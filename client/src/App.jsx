@@ -15,7 +15,7 @@ import SideBar from "./components/layouts/SideBar/SideBar";
 import ChatRoom from "./pages/ChatRoom/ChatRoom";
 import Profile from "./pages/Profile/Profile";
 import Settings from "./pages/Settings/Settings";
-import Explore from "./pages/Explore/Explore";
+// import Explore from "./pages/Explore/Explore";
 import Notification from "./components/UI/Notification/Notification";
 import { hideCardNotification } from "./store/actions/notification";
 import "./App.scss";
@@ -141,7 +141,7 @@ function App() {
                     </div>
                   }
                 />
-                <Route
+                {/* <Route
                   path="explore"
                   element={
                     <div className="pages__component">
@@ -149,7 +149,7 @@ function App() {
                       <Explore socket={socket} />
                     </div>
                   }
-                />
+                /> */}
                 <Route
                   path="profile"
                   element={

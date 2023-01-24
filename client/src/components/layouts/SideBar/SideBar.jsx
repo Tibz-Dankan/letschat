@@ -78,7 +78,7 @@ const SideBar = () => {
             </span>
           </div>
           <nav className={styles["sidebar__nav"]}>
-            <li className={styles["sidebar__nav__list"]}>
+            {/* <li className={styles["sidebar__nav__list"]}>
               <NavLink
                 to="explore"
                 className={styles["sidebar__nav__list__link"]}
@@ -97,7 +97,7 @@ const SideBar = () => {
                   Explore
                 </span>
               </NavLink>
-            </li>
+            </li> */}
             <li className={styles["sidebar__nav__list"]}>
               <NavLink
                 to="chat"

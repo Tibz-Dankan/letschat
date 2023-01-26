@@ -134,15 +134,6 @@ export const forgotPassword = (email) => {
     }
 
     const data = await response.json();
-
-    await dispatch(
-      authActions.authenticate({
-        token: data.token,
-        user: data.user,
-      })
-    );
-    saveDataToStorage(data.user, data.token);
-
     dispatch(
       notificationActions.showCardNotification({
         type: "success",
@@ -152,6 +143,46 @@ export const forgotPassword = (email) => {
     setTimeout(() => {
       dispatch(notificationActions.hideCardNotification());
     }, [5000]);
+  };
+};
+
+export const resetPassword = (password, passwordResetToken) => {
+  return async (dispatch) => {
+    const response = await fetch(
+      `${baseUrl}/api/users/reset-password/${passwordResetToken}`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          password,
+        }),
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      await dispatch(
+        notificationActions.showCardNotification({
+          type: "error",
+          message: error.message,
+        })
+      );
+      setTimeout(() => {
+        dispatch(notificationActions.hideCardNotification());
+      }, [5000]);
+      throw new Error(error.message);
+    }
+
+    const data = await response.json();
+    await dispatch(
+      authActions.authenticate({
+        token: data.token,
+        user: data.user,
+      })
+    );
+    saveDataToStorage(data.user, data.token);
   };
 };
 

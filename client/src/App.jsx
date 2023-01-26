@@ -16,6 +16,7 @@ import ChatRoom from "./pages/ChatRoom/ChatRoom";
 import Profile from "./pages/Profile/Profile";
 import Settings from "./pages/Settings/Settings";
 import ForgotPassword from "./components/UI/ForgotPassword/ForgotPassword";
+import ResetPassword from "./components/UI/ResetPassword/ResetPassword";
 
 // import Explore from "./pages/Explore/Explore";
 import Notification from "./components/UI/Notification/Notification";
@@ -107,6 +108,22 @@ function App() {
                       />
                     )}
                     <ForgotPassword />
+                  </div>
+                }
+              />
+
+              <Route
+                path="reset-password/:passwordResetToken"
+                element={
+                  <div>
+                    {notification.showCardNotification && (
+                      <Notification
+                        type={notification.cardNotificationType}
+                        message={notification.cardMessage}
+                        onClose={closeCardHandler}
+                      />
+                    )}
+                    <ResetPassword />
                   </div>
                 }
               />

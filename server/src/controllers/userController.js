@@ -74,6 +74,37 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   res.status(200).json({ status: "success", message: "Token sent to email" });
 });
 
+const resetPassword = asyncHandler(async (req, res, next) => {
+  const token = req.params.token;
+  if (!token) return next(new AppError("Please a reset token"));
+  const hashedToken = createHash("sha256").update(token).digest("hex");
+
+  const user = await User.findByToken(hashedToken);
+  console.log("user");
+  console.log(user);
+
+  if (!user) return next(new AppError("Supplied token is invalid"));
+
+  if (new Date(user.passwordResetExpires) < new Date()) {
+    return next(new AppError("Token is expired", 400));
+  }
+  const password = req.body.password;
+  await User.updatePassword(user.userId, password);
+
+  user.passwordResetToken = null;
+  user.passwordResetExpires = null;
+  await User.updatePasswordResetToken(user);
+
+  const userObj = {
+    userIndex: user.userIndex,
+    userId: user.userId,
+    userName: user.userName,
+    email: user.email,
+    imageUrl: user.imageUrl,
+  };
+  createSendToken(userObj, 200, res);
+});
+
 const updatePassword = asyncHandler(async (req, res, next) => {
   const userId = req.body.userId;
   const currentPassword = req.body.currentPassword;

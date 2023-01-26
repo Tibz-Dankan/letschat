@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const { randomBytes, createHash } = require("crypto");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -58,6 +59,46 @@ User.updatePassword = async (userId, newPassword) => {
     },
     data: {
       password: newHashedPassword,
+    },
+  });
+};
+
+User.findByToken = async (token) => {
+  return await prisma.user.findFirst({
+    where: {
+      passwordResetToken: { equals: token },
+    },
+  });
+};
+
+User.createPasswordResetToken = () => {
+  const resetToken = randomBytes(32).toString("hex");
+  return resetToken;
+};
+
+User.savePasswordResetToken = async (userId, resetToken) => {
+  const hashedToken = createHash("sha256").update(resetToken).digest("hex");
+
+  return await prisma.user.update({
+    where: {
+      userId: userId,
+    },
+    data: {
+      passwordResetToken: hashedToken,
+      // tokenExpires: new Date(Date.now() + 1000 * 60 * 20).toISOString(),
+      passwordTokenExpires: new Date(Date.now() + 1000 * 60 * 20),
+    },
+  });
+};
+
+User.updatePasswordResetToken = async (userObj) => {
+  return await prisma.user.update({
+    where: {
+      userId: userObj.userId,
+    },
+    data: {
+      passwordResetToken: userObj.passwordResetToken,
+      passwordTokenExpires: userObj.passwordTokenExpires,
     },
   });
 };

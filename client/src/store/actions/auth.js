@@ -107,6 +107,54 @@ export const signup = (userName, email, password) => {
   };
 };
 
+export const forgotPassword = (email) => {
+  return async (dispatch) => {
+    const response = await fetch(`${baseUrl}/api/users/forgot-password`, {
+      method: "POST",
+      body: JSON.stringify({
+        email,
+      }),
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      dispatch(
+        notificationActions.showCardNotification({
+          type: "error",
+          message: error.message,
+        })
+      );
+      setTimeout(() => {
+        dispatch(notificationActions.hideCardNotification());
+      }, [5000]);
+      throw new Error(error.message);
+    }
+
+    const data = await response.json();
+
+    await dispatch(
+      authActions.authenticate({
+        token: data.token,
+        user: data.user,
+      })
+    );
+    saveDataToStorage(data.user, data.token);
+
+    dispatch(
+      notificationActions.showCardNotification({
+        type: "success",
+        message: data.message,
+      })
+    );
+    setTimeout(() => {
+      dispatch(notificationActions.hideCardNotification());
+    }, [5000]);
+  };
+};
+
 export const updatePassword = (userId, currentPassword, newPassword, token) => {
   return async (dispatch) => {
     const response = await fetch(`${baseUrl}/api/users/update-password`, {

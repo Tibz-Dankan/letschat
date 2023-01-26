@@ -15,6 +15,8 @@ import SideBar from "./components/layouts/SideBar/SideBar";
 import ChatRoom from "./pages/ChatRoom/ChatRoom";
 import Profile from "./pages/Profile/Profile";
 import Settings from "./pages/Settings/Settings";
+import ForgotPassword from "./components/UI/ForgotPassword/ForgotPassword";
+
 // import Explore from "./pages/Explore/Explore";
 import Notification from "./components/UI/Notification/Notification";
 import { hideCardNotification } from "./store/actions/notification";
@@ -90,6 +92,21 @@ function App() {
                       />
                     )}
                     <LogIn />
+                  </div>
+                }
+              />
+              <Route
+                path="forgot-password"
+                element={
+                  <div>
+                    {notification.showCardNotification && (
+                      <Notification
+                        type={notification.cardNotificationType}
+                        message={notification.cardMessage}
+                        onClose={closeCardHandler}
+                      />
+                    )}
+                    <ForgotPassword />
                   </div>
                 }
               />

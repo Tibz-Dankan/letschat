@@ -15,20 +15,21 @@ datasource db {
 }
 
 model User {
-  userIndex Int       @unique @default(autoincrement())
-  userId    String    @id @default(uuid())
-  userName  String    @db.VarChar(255)
-  email     String    @unique
-  password  String    @db.VarChar(255)
-  imageUrl  String?   @db.VarChar(255)
-  imageName String?   @db.VarChar(255)
-  createdAt DateTime  @default(now())
-  updateAt  DateTime? @updatedAt
-  sender    Chat[]    @relation("sender")
-  recipient Chat[]    @relation("recipient")
+  userIndex            Int       @unique @default(autoincrement())
+  userId               String    @id @default(uuid())
+  userName             String    @db.VarChar(255)
+  email                String    @unique
+  password             String    @db.VarChar(255)
+  imageUrl             String?   @db.VarChar(255)
+  imageName            String?   @db.VarChar(255)
+  createdAt            DateTime  @default(now())
+  updateAt             DateTime? @updatedAt
+  sender               Chat[]    @relation("sender")
+  recipient            Chat[]    @relation("recipient")
+  passwordResetToken   String?
+  passwordTokenExpires DateTime?
 }
 
-// TODO: add messageIndex column
 model Chat {
   messageIndex Int     @unique @default(autoincrement())
   messageId    String  @id @default(uuid())

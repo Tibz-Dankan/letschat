@@ -6,7 +6,9 @@ const { getStorage, deleteObject } = require("firebase/storage");
 const { ref, uploadString, getDownloadURL } = require("firebase/storage");
 const path = require("path");
 const AppError = require("../utils/error");
+const Email = require("../utils/email");
 const { asyncHandler } = require("../utils/asyncHandler");
+const { createHash } = require("crypto");
 require("dotenv").config();
 
 const assignToken = (userId) => {
@@ -51,7 +53,27 @@ const login = asyncHandler(async (req, res, next) => {
   createSendToken(userObj, 200, res);
 });
 
-// TODO: forgot password, update password
+const forgotPassword = asyncHandler(async (req, res, next) => {
+  const email = req.body.email;
+  console.log("email");
+  console.log(email);
+  if (!email) return next(new AppError("Please fill out all fields", 400));
+  const user = await User.findUserByEmail(email);
+
+  if (!user) return next(new AppError("Supplied email is invalid", 403));
+
+  const resetToken = User.createPasswordResetToken();
+  await User.savePasswordResetToken(user.userId, resetToken);
+
+  // const resetURL = `${req.protocol}://letschat-frontend.netlify.app/reset-password/${resetToken}`;
+  const resetURL = `${req.protocol}://localhost:5173/reset-password/${resetToken}`;
+  const subject = "Reset Password";
+
+  await new Email(email, subject).sendPasswordReset(resetURL, user.userName);
+
+  res.status(200).json({ status: "success", message: "Token sent to email" });
+});
+
 const updatePassword = asyncHandler(async (req, res, next) => {
   const userId = req.body.userId;
   const currentPassword = req.body.currentPassword;
@@ -139,6 +161,8 @@ const uploadPhoto = asyncHandler(async (req, res, next) => {
 module.exports = {
   signup,
   login,
+  forgotPassword,
+  resetPassword,
   updatePassword,
   updateProfile,
   uploadPhoto,

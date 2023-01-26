@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+// const path = require("path");
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const { chatHandler } = require("./controllers/chatController");
@@ -27,6 +28,10 @@ const io = new Server(server, {
 });
 
 app.use(express.json());
+
+// app.set("view engine", "ejs");
+// app.set("views", path.join(__dirname, "views"));
+// app.use(express.static(path.join(__dirname, "views")));
 
 app.use("/api/users", userRoutes);
 app.use("/api/chats", chatRoutes);

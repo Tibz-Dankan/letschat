@@ -65,8 +65,8 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   const resetToken = User.createPasswordResetToken();
   await User.savePasswordResetToken(user.userId, resetToken);
 
-  // const resetURL = `${req.protocol}://letschat-frontend.netlify.app/reset-password/${resetToken}`;
-  const resetURL = `${req.protocol}://localhost:5173/reset-password/${resetToken}`;
+  const resetURL = `${req.protocol}://letschat-frontend.netlify.app/reset-password/${resetToken}`;
+  // const resetURL = `${req.protocol}://localhost:5173/reset-password/${resetToken}`;
   const subject = "Reset Password";
 
   await new Email(email, subject).sendPasswordReset(resetURL, user.userName);
@@ -80,12 +80,10 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   const hashedToken = createHash("sha256").update(token).digest("hex");
 
   const user = await User.findByToken(hashedToken);
-  console.log("user");
-  console.log(user);
 
   if (!user) return next(new AppError("Supplied token is invalid"));
 
-  if (new Date(user.passwordResetExpires) < new Date()) {
+  if (User.passwordResetExpired(user.passwordResetExpires)) {
     return next(new AppError("Token is expired", 400));
   }
   const password = req.body.password;
@@ -110,8 +108,7 @@ const updatePassword = asyncHandler(async (req, res, next) => {
   const currentPassword = req.body.currentPassword;
   const newPassword = req.body.newPassword;
   const user = await User.findUserById(userId);
-  console.log("user");
-  console.log(user);
+
   if (!(await User.comparePasswords(currentPassword, user.password))) {
     return next(new AppError("Incorrect current password", 403));
   }

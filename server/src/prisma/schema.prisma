@@ -27,7 +27,7 @@ model User {
   sender               Chat[]    @relation("sender")
   recipient            Chat[]    @relation("recipient")
   passwordResetToken   String?
-  passwordTokenExpires DateTime?
+  passwordResetExpires DateTime?
 }
 
 model Chat {

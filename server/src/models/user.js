@@ -85,8 +85,7 @@ User.savePasswordResetToken = async (userId, resetToken) => {
     },
     data: {
       passwordResetToken: hashedToken,
-      // tokenExpires: new Date(Date.now() + 1000 * 60 * 20).toISOString(),
-      passwordTokenExpires: new Date(Date.now() + 1000 * 60 * 20),
+      passwordResetExpires: new Date(Date.now() + 1000 * 60 * 20),
     },
   });
 };
@@ -98,9 +97,14 @@ User.updatePasswordResetToken = async (userObj) => {
     },
     data: {
       passwordResetToken: userObj.passwordResetToken,
-      passwordTokenExpires: userObj.passwordTokenExpires,
+      passwordResetExpires: userObj.passwordResetExpires,
     },
   });
+};
+
+User.passwordResetExpired = (expiryDate) => {
+  const isExpired = new Date(expiryDate) < new Date(Date.now());
+  return isExpired;
 };
 
 User.updateProfile = async (userId, userName, email) => {

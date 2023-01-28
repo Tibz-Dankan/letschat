@@ -5,7 +5,7 @@
   width: 100%;
   padding: 1.2rem 2.4rem;
   position: relative;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   &--close {
     color: var(--color-grey-dark-1);
     z-index: 10000;
@@ -74,17 +74,16 @@
     }
   }
   &__footer {
-    // text-align: start;
     color: var(--color-grey-dark-1);
     position: absolute;
     bottom: 0rem;
     left: 0rem;
     right: 0rem;
     width: 100%;
-    font-size: 1.2rem;
+    font-size: 1.6rem;
     &__content {
       padding: 2.4rem;
-      text-align: center;
+      text-align: start;
       position: relative;
       &::before {
         content: "";

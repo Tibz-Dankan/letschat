@@ -22,10 +22,9 @@ class Email {
       html: html,
     };
     try {
-      console.log("sending mail")
+      console.log("sending mail");
       await SGmail.send(mailOptions);
-      console.log("mail sent")
-
+      console.log("mail sent");
     } catch (error) {
       console.log("error sending email", error);
     }
@@ -33,7 +32,7 @@ class Email {
 
   async sendWelcome(userName) {
     const html = await ejs.renderFile(
-      path.join(__dirname, "../views/welcome.ejs"),
+      path.join(__dirname, "../views/email/welcome.ejs"),
       {
         subject: this.subject,
         userName: userName,
@@ -46,7 +45,7 @@ class Email {
     console.log("Password reset url: ", url);
 
     const html = await ejs.renderFile(
-      path.join(__dirname, "../views/reset-password.ejs"),
+      path.join(__dirname, "../views/email/reset-password.ejs"),
       {
         subject: "Password Reset",
         userName: userName,
@@ -58,7 +57,7 @@ class Email {
 
   async sendContactUs(name, message, email, subject) {
     const html = await ejs.renderFile(
-      path.join(__dirname, "../views/contact.ejs"),
+      path.join(__dirname, "../views/email/contact.ejs"),
       {
         subject: "Contact Us Message",
         name: name,
@@ -74,7 +73,7 @@ class Email {
     console.log("Catch error :", error);
 
     const html = await ejs.renderFile(
-      path.join(__dirname, "../views/bug.ejs"),
+      path.join(__dirname, "../views/email/bug.ejs"),
       {
         subject: "A Bug In Production",
         userName: userName,

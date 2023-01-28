@@ -64,6 +64,13 @@ const LogIn = () => {
               required
             />
           </div>
+          <div className={styles["forgot__password__container"]}>
+            <span>
+              <Link to="/forgot-password" className={styles["link"]}>
+                Forgot Password?
+              </Link>
+            </span>
+          </div>
           <div className={styles["login__form__input"]}>
             <input
               type={showPassword ? "text" : "password"}
@@ -101,9 +108,6 @@ const LogIn = () => {
             )}
             {isLoading && <Loading event={"on-form-loading"} />}
           </div>
-          {/* <div className={styles["forgot__password__container"]}>
-            <p>Forgot Password?</p>
-          </div> */}
           <div className={styles["dont__have___account__container"]}>
             <span className={styles["dont__have__account"]}>
               <Link to="/signup" className={styles["link"]}>

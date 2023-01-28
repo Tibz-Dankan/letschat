@@ -1,4 +1,5 @@
 import React, { useState, Fragment } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { IconContext } from "react-icons";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
@@ -166,6 +167,13 @@ const ResetPassword = () => {
               </button>
             )}
             {isLoading && <Loading event={"on-form-submit"} />}
+          </div>
+          <div className={styles["have__account__container"]}>
+            <span className={styles["have__account"]}>
+              <Link to="/forgot-password" className={styles["link"]}>
+                Token invalid? | Token expired?
+              </Link>
+            </span>
           </div>
         </form>
 

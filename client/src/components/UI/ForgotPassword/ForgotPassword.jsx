@@ -36,7 +36,7 @@ const ForgotPassword = () => {
           onSubmit={(event) => submitEmailHandler(event)}
         >
           <h4 className={styles["forgot-password__form__heading"]}>
-            Provide your email
+            Provide your email to get password reset token
           </h4>
           <div className={styles["forgot-password__form__input"]}>
             <input

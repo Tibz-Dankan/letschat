@@ -65,6 +65,19 @@
         color: var(--color-grey-dark-1);
       }
     }
+    .forgot__password__container {
+      font-size: 1.4rem;
+      span {
+        .link {
+          text-decoration: none;
+          color: var(--color-secondary);
+          &:hover {
+            color: var(--color-secondary-light);
+            transition: 0.35s;
+          }
+        }
+      }
+    }
     .button__container {
       .form-btn {
         font-size: 1.6rem;

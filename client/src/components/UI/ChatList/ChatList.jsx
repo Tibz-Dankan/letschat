@@ -138,20 +138,20 @@ const ChatList = ({ socket, isLoading }) => {
                   <span className={styles["chat__list__chat-mate__data--name"]}>
                     {chatMate.userName}
                   </span>
-                  <span
+                  {/* <span
                     className={
                       styles["chat__list__chat-mate__data--last-message"]
                     }
                   >
                     last message text
-                  </span>
-                  <span
+                  </span> */}
+                  {/* <span
                     className={
                       styles["chat__list__chat-mate__data--message-date"]
                     }
                   >
                     Date Or Time
-                  </span>
+                  </span> */}
                 </div>
               </div>
             );

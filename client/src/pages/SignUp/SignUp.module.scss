@@ -38,7 +38,7 @@
       margin-bottom: 2.4rem;
     }
     &__input {
-      margin-bottom: 1.8rem;
+      margin-bottom: 1.6rem;
       position: relative;
       &--field {
         font-size: 1.6rem;
@@ -53,6 +53,19 @@
         &:focus {
           border: 0.2rem solid var(--color-primary-dark);
           transition: 0.35s;
+        }
+        /* Chrome, Firefox, Opera, Safari 10.1+ */
+        &::placeholder {
+          color: var(--color-grey-dark-1);
+          opacity: 1;
+        }
+        /* Internet Explorer 10-11 */
+        &:-ms-input-placeholder {
+          color: var(--color-grey-dark-1);
+        }
+        /* Microsoft Edge */
+        &::-ms-input-placeholder {
+          color: var(--color-grey-dark-1);
         }
       }
       &--length-ok,

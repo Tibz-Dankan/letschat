@@ -1,8 +1,47 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { IconContext } from "react-icons";
+import { FaWindowClose } from "react-icons/fa";
+import { GiHamburgerMenu } from "react-icons/gi";
 import styles from "./Home.module.scss";
 
 const Home = () => {
+  const [showNavLinks, setShowNavLinks] = useState(false);
+
+  const showNavHandler = () => {
+    const nav = document.querySelector("#nav-links");
+    setShowNavLinks(true);
+    nav.style.display = "block";
+  };
+
+  const closeNavHandler = () => {
+    const nav = document.querySelector("#nav-links");
+    setShowNavLinks(false);
+    nav.style.display = "none";
+  };
+
+  const windowWidth = () => {
+    const width = window.innerWidth;
+    return width;
+  };
+
+  const [browserWindowWidth, setBrowserWindowWidth] = useState(windowWidth());
+
+  useEffect(() => {
+    const widthResizeHandler = () => {
+      setBrowserWindowWidth(windowWidth());
+    };
+    window.addEventListener("resize", widthResizeHandler);
+
+    if (window.matchMedia("(min-width: 600px)").matches) {
+      showNavHandler();
+    }
+    if (window.matchMedia("(max-width: 600px)").matches) {
+      closeNavHandler();
+    }
+    return () => window.removeEventListener("resize", widthResizeHandler);
+  }, [browserWindowWidth]);
+
   const viewAbout = () => {
     const about = document.querySelector("#about");
     about.scrollIntoView({
@@ -16,7 +55,7 @@ const Home = () => {
         <header className={styles["home__header"]}>
           <div>
             <span className={styles["home__header-logo"]}>LetsChat</span>
-            <nav className={styles["home__header-nav"]}>
+            <nav className={styles["home__header-nav"]} id="nav-links">
               <ul>
                 <li onClick={() => viewAbout()}>
                   <NavLink to="#" className={styles["link"]}>
@@ -35,20 +74,43 @@ const Home = () => {
                 </li>
               </ul>
             </nav>
+            {!showNavLinks && (
+              <span
+                className={styles["menu-icon"]}
+                onClick={() => showNavHandler()}
+              >
+                <IconContext.Provider
+                  value={{
+                    size: "2rem",
+                  }}
+                >
+                  <GiHamburgerMenu />
+                </IconContext.Provider>
+              </span>
+            )}
+            {showNavLinks && (
+              <span
+                className={styles["menu-icon"]}
+                onClick={() => closeNavHandler()}
+              >
+                <IconContext.Provider
+                  value={{
+                    size: "2rem",
+                  }}
+                >
+                  <FaWindowClose />
+                </IconContext.Provider>
+              </span>
+            )}
           </div>
           <div className={styles["home__header__content"]}>
             <div className={styles["home__header__content-text"]}>
-              <p className={styles["home__header__content-text--title"]}>
+              <h1 className={styles["home__header__content-text--title"]}>
                 Chat with anyone
-              </p>
+              </h1>
               <p className={styles["home__header__content-text--detail"]}>
-                LetsChat is an online messaging platform that allows you to
-                connect and communicate with a diverse group of users who are
-                available on the platform at any given time. It offers a
-                convenient and easy way to engage in conversations with people
-                from all over the world. With its user-friendly interface, it
-                makes it easy for anyone to join and start chatting in a matter
-                of minutes.
+                Start a conversation with just about anyone on the platform and
+                build your friendship from there.
               </p>
               <button>
                 <Link to="signup" className={styles["link"]}>
@@ -62,7 +124,7 @@ const Home = () => {
         <section id="about" className={styles["home__about"]}>
           <div className={styles["home__about-image"]}></div>
           <div className={styles["home__about-text"]}>
-            <p className={styles["home__about-text--title"]}>About</p>
+            <h3 className={styles["home__about-text--title"]}>About</h3>
             <p>
               LetsChat is a messaging platform that allows users to communicate
               with anyone in real-time. It is designed for both personal and

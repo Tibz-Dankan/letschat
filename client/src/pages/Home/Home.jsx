@@ -12,6 +12,7 @@ const Home = () => {
     const nav = document.querySelector("#nav-links");
     setShowNavLinks(true);
     nav.style.display = "block";
+    nav.style.height = "auto";
   };
 
   const closeNavHandler = () => {
@@ -90,7 +91,7 @@ const Home = () => {
             )}
             {showNavLinks && (
               <span
-                className={styles["menu-icon"]}
+                className={styles["close-icon"]}
                 onClick={() => closeNavHandler()}
               >
                 <IconContext.Provider

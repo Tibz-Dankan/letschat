@@ -55,4 +55,5 @@ server.listen(PORT, () =>
   console.log(`server started and running on port ${PORT}...`)
 );
 
-module.exports = io;
+// module.exports = app;
+module.exports = server;

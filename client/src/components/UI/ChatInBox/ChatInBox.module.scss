@@ -224,18 +224,15 @@
     padding: 1.2rem 1.2rem;
     display: flex;
     justify-content: center;
+    @media (max-width: 450px) {
+      padding: 1.2rem 0.4rem;
+    }
     &__group {
       display: inherit;
       align-items: center;
       width: 90%;
       @media (max-width: 450px) {
-        width: 80%;
-      }
-      @media (max-width: 300px) {
-        width: 75%;
-      }
-      @media (max-width: 200px) {
-        width: 55%;
+        width: 96%;
       }
       &__input {
         flex: 1;
@@ -262,6 +259,12 @@
         margin-left: 0.8rem;
         &:hover {
           cursor: pointer;
+        }
+        @media (max-width: 300px) {
+          margin-left: 0.4rem;
+        }
+        @media (max-width: 280px) {
+          background-color: var(--color-grey-dark-3);
         }
       }
     }

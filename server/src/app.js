@@ -5,6 +5,7 @@ const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const { chatHandler } = require("./controllers/chatController");
 const { errorHandler } = require("./controllers/errorController");
+const { keepActiveController } = require("keep-apps-active");
 const app = express();
 
 let url;
@@ -38,6 +39,8 @@ app.use("/api/chats", chatRoutes);
 
 // chats
 chatHandler(io);
+
+keepActiveController(app);
 
 app.use(errorHandler);
 
